@@ -2,18 +2,16 @@ import logo from "../assets/white-logo.png";
 import { Link } from "react-router-dom";
 
 interface Props {
-  containerClassName?: string;
-  center?: boolean;
+  className?: string;
 }
 
-const Logo = ({ containerClassName, center }: Props) => {
+const Logo = ({className}: Props) => {
   return (
-    <div className={`w-2xs ${center ? 'mx-auto' : ''} ${containerClassName}`}>
-      <Link to={"/"} className={`w-2xs flex gap-2 items-center ${center ? 'justify-center' : ''}`}>
+    
+      <Link to={"/"} className={`flex gap-2 items-center ${className}`}>
         <img src={logo} className="w-12" />
         <p className="font-bold">FocusX</p>
       </Link>
-    </div>
   );
 };
 

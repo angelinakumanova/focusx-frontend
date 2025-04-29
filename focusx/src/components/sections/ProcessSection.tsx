@@ -24,7 +24,7 @@ const ProcessSection = () => {
         transition={{ duration: 1, ease: "easeInOut" }}
         
       >
-        <div id={id} ref={ref} className="my-40 min-h-[50vh]">
+        <div id={id} ref={ref} className="p-4 lg:p-0 my-40 min-h-[50vh]">
           <div className="my-10">
             <h1 className="text-center font-bold text-6xl uppercase">
               FocusX in Action

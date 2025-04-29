@@ -18,7 +18,9 @@ const LoginForm = () => {
 
   return (
     <>
-      <Logo containerClassName="mt-10 text-2xl" center={true} />
+      <div className="flex justify-center">
+        <Logo className="mt-10 text-3xl" />
+      </div>
       <motion.div
         className="mt-42"
         initial={{ opacity: 0, y: 20 }}
