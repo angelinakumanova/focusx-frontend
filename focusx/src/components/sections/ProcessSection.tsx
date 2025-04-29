@@ -1,48 +1,54 @@
 import { motion } from "motion/react";
+import SectionDivider from "./SectionDivider";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+import { useSectionStore } from "@/useSectionStore";
+
 
 const ProcessSection = () => {
+  const setActiveSection = useSectionStore((s) => s.setActiveSection)
+    const { ref, inView } = useInView({ threshold: 0.5 })
+  
+    const id = 'process';
+  
+    useEffect(() => {
+      if (inView) setActiveSection(id)
+    }, [inView, id, setActiveSection])
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: "easeInOut" }}
-    >
-      <div
-      // marginY={40} minHeight={"50vh"}
-       id="process-section"
+    <>
+      <SectionDivider  />
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        
       >
-        <h1
-          // textAlign={"center"}
-          // fontWeight={"bold"}
-          // size={"6xl"}
-          // textShadow={"2xl"}
-          // textTransform={"uppercase"}
-        >
-          The Process
-        </h1>
+        <div id={id} ref={ref} className="my-40 min-h-[50vh]">
+          <div className="my-10">
+            <h1 className="text-center font-bold text-6xl uppercase">
+              FocusX in Action
+            </h1>
+            <p className="text-xl text-center opacity-80">
+              Get addicted to progress, not distraction.
+            </p>
+          </div>
 
-        <div 
-        // fontSize={"xl"}
-        >
-          <h1
-          //  fontWeight={"bold"} size={"2xl"}
-           >
-            Why FocusX?{" "}
-          </h1>
-          <p >
+          <div className="text-xl max-w-7xl mx-auto">
+            <h1 className="font-bold text-2xl">Why FocusX? </h1>
+            <p>
+              It is a powerful tool designed to help individuals unlock their
+              potential by enhancing their focus and productivity. Users can set
+              up personalized rewards for milestones reached, making progress
+              more enjoyable and tangible. With this unique approach, FocusX
+              transforms your productivity journey into one that's not only
+              effective but also rewarding.
+            </p>
 
-            It is a powerful tool designed to help individuals unlock their
-            potential by enhancing their focus and productivity. Users can set
-            up personalized rewards for milestones reached, making progress more
-            enjoyable and tangible. With this unique approach, FocusX transforms
-            your productivity journey into one that's not only effective but
-            also rewarding.
-          </p>
-
-          
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

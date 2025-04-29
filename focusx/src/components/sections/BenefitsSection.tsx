@@ -1,18 +1,31 @@
 import { motion } from "motion/react";
 import BenefitsList from "./BenefitsList";
 import SectionDivider from "./SectionDivider";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+import { useSectionStore } from "@/useSectionStore";
+
+
 
 const BenefitsSection = () => {
+  const setActiveSection = useSectionStore((s) => s.setActiveSection)
+  const { ref, inView } = useInView({ threshold: 0.5 })
+
+  const id = 'benefits';
+
+  useEffect(() => {
+    if (inView) setActiveSection(id)
+  }, [inView, id, setActiveSection])
+
   return (
     <>
-      <SectionDivider id="benefits-section" />
+      <SectionDivider />
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        
       >
-        <div className="my-40 min-h-[50vh]">
+        <div id={id} ref={ref} className="my-40 min-h-[50vh]">
           <div className="my-10">
             <h1 className="text-center font-bold text-6xl uppercase">
               Sharpen Your Focus, Amplify Your Results

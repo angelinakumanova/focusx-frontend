@@ -3,8 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
-import { BottomGradient } from "../SignUpForm";
-import Logo from "../Logo";
+import Logo from "./Logo";
+import { BottomGradient } from "./SignUpForm";
 
 const inputStyle =
   "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
@@ -18,7 +18,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <Logo className="justify-center mt-10 text-2xl" />
+      <Logo containerClassName="mt-10 text-2xl" center={true} />
       <motion.div
         className="mt-42"
         initial={{ opacity: 0, y: 20 }}

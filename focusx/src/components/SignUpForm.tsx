@@ -11,14 +11,14 @@ const inputStyle =
   "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
 const labelStyle = "text-white font-bold text-base";
 
-export default function SignupFormDemo() {
+export default function SignUpForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
   };
   return (
     <>
-      <Logo className="justify-center mt-10 text-2xl" />
+      <Logo containerClassName="mt-10 text-2xl" center={true} />
       <motion.div
         className="mt-20"
         initial={{ opacity: 0, y: 20 }}

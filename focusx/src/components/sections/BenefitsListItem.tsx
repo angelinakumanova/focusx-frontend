@@ -5,7 +5,7 @@ interface Props {
   children: string;
 }
 
-const MotionText = motion.create('p');
+const MotionText = motion.create("p");
 
 const BenefitsListItem = ({ children }: Props) => (
   <MotionText
@@ -15,11 +15,7 @@ const BenefitsListItem = ({ children }: Props) => (
     className="flex items-center"
   >
     <TiTick />
-    <p className="text-2xl font-bold"
-    //  fontSize={"2xl"} fontWeight={"bold"}
-     >
-      {children}
-    </p>
+    <span className="text-2xl font-bold">{children}</span>
   </MotionText>
 );
 
