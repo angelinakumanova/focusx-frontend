@@ -17,19 +17,15 @@ const LandingSection = () => {
 
   return (
     <>
+      <DotBackground />
+
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         className="my-32 lg:my-56 flex justify-center min-h-[20vh]"
       >
-        <DotBackground />
-
-        <div
-          id={id}
-          ref={ref}
-          className="max-w-full lg:max-w-xl text-center"
-        >
+        <div id={id} ref={ref} className="max-w-full lg:max-w-xl text-center">
           <h1 className="text-5xl md:text-7xl font-bold">
             <FlipWords
               words={["Build focus.", "Win rewards.", "Own growth."]}

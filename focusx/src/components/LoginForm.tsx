@@ -1,10 +1,10 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/auth-input";
+import { Label } from "@/components/ui/auth-label";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { BottomGradient } from "./SignUpForm";
+import { BottomGradient } from "./BottomGradient";
 
 const inputStyle =
   "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
@@ -19,8 +19,9 @@ const LoginForm = () => {
   return (
     <>
       <div className="flex justify-center">
-        <Logo className="mt-10 text-3xl" />
+        <Logo className="flex-col mt-10 text-xl opacity-90" />
       </div>
+
       <motion.div
         className="mt-42"
         initial={{ opacity: 0, y: 20 }}

@@ -1,7 +1,11 @@
+import Dashboard from "@/components/Dashboard"
+import { UserSidebar } from "@/components/UserSidebar"
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <UserSidebar>
+      <Dashboard />
+    </UserSidebar>
   )
 }
 
