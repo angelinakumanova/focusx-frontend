@@ -45,18 +45,15 @@ export function UserSidebar({ children }: Props) {
       )}
     >
       <Sidebar animate={false}>
-        <SidebarBody className="justify-between gap-10 bg-[#111111]">
-          <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-neutral-900">
-            <>
-              <Logo />
-            </>
+        <SidebarBody className="bg-[#111111]">
+          <div className="bg-gradient-to-t from-neutral-800 to-neutral-950 rounded-2xl p-4 flex flex-1 flex-col overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-neutral-900">
+            <Logo />
             <div className="mt-8 flex flex-col gap-2 ">
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
           </div>
-          <SectionDivider />
         </SidebarBody>
       </Sidebar>
       {children}

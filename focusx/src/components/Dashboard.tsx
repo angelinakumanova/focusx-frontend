@@ -1,15 +1,11 @@
 "use client";
 
 import {
-  IconCircleCheck,
-  IconCirclePlus,
-  IconClock,
-  IconFlame,
-  IconGift,
-  IconTarget,
+  IconGift
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import GoalForm from "./GoalForm";
 import StatisticsGrid from "./StatisticsGrid";
 
 export default function Dashboard() {
@@ -22,7 +18,6 @@ export default function Dashboard() {
       reward: "Movie Night",
       milestone: "Consistency",
     },
-    
   ]);
 
   const handleHighlightGoal = (index: number) => {
@@ -36,27 +31,22 @@ export default function Dashboard() {
 
   const activeGoal = goals.find((g) => g.isActive);
 
-  const [goalType, setGoalType] = useState("Session");
-  const [newGoal, setNewGoal] = useState("");
-  const [newMilestone, setNewMilestone] = useState("");
-  const [sessionDuration, setSessionDuration] = useState("");
-  const [newReward, setNewReward] = useState("");
-  const handleAddGoal = () => {
-    if (newGoal.trim() && newMilestone.trim() && newReward.trim()) {
-      setGoals([
-        ...goals,
-        {
-          title: newGoal,
-          milestone: newMilestone,
-          progress: 0,
-          reward: newReward,
-        },
-      ]);
-      setNewGoal("");
-      setNewMilestone("");
-      setNewReward("");
-    }
-  };
+  // const handleAddGoal = () => {
+  //   if (newGoal.trim() && newMilestone.trim() && newReward.trim()) {
+  //     setGoals([
+  //       ...goals,
+  //       {
+  //         title: newGoal,
+  //         milestone: newMilestone,
+  //         progress: 0,
+  //         reward: newReward,
+  //       },
+  //     ]);
+  //     setNewGoal("");
+  //     setNewMilestone("");
+  //     setNewReward("");
+  //   }
+  // };
 
   // State for modal
   const [goalToRemove, setGoalToRemove] = useState<number>();
@@ -90,118 +80,7 @@ export default function Dashboard() {
       <StatisticsGrid activeGoal={activeGoal} />
 
       {/* New Goal Form */}
-      <div className="bg-neutral-900/60 backdrop-blur-md p-6 rounded-2xl shadow-lg mb-20 border border-neutral-800">
-        <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-          <IconTarget className="w-5 h-5 text-neutral-400" />
-          Set a New Goal
-        </h2>
-
-        <div className="grid gap-5">
-          {/* Title */}
-          <div>
-            <label className="text-sm font-medium text-white mb-1 block">
-              Goal Title
-            </label>
-            <input
-              type="text"
-              placeholder="e.g., Study Java"
-              value={newGoal}
-              onChange={(e) => setNewGoal(e.target.value)}
-              className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
-            />
-          </div>
-
-          {/* Goal Type Selector */}
-          <div>
-            <label className="text-sm font-medium text-white mb-1 block">
-              Goal Type
-            </label>
-            <div className="flex items-center gap-3">
-              {["Session", "Streak"].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setGoalType(type)}
-                  className={`px-4 py-1 rounded-full text-sm transition-colors ${
-                    goalType === type
-                      ? "bg-green-600 text-white"
-                      : "bg-neutral-700 text-gray-300"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Conditional Inputs */}
-          {goalType === "Session" && (
-            <>
-              <div>
-                <label className="text-sm font-medium text-white mb-1 block">
-                  Number of Sessions
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 5"
-                  value={newMilestone}
-                  onChange={(e) => setNewMilestone(e.target.value)}
-                  className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-white mb-1 block">
-                  Session Duration (mins)
-                </label>
-                <input
-                  type="number"
-                  placeholder="e.g., 60"
-                  value={sessionDuration}
-                  onChange={(e) => setSessionDuration(e.target.value)}
-                  className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
-                />
-              </div>
-            </>
-          )}
-
-          {goalType === "Streak" && (
-            <div>
-              <label className="text-sm font-medium text-white mb-1 block">
-                Days in a Row
-              </label>
-              <input
-                type="number"
-                placeholder="e.g., 7"
-                value={newMilestone}
-                onChange={(e) => setNewMilestone(e.target.value)}
-                className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
-              />
-            </div>
-          )}
-
-          {/* Reward */}
-          <div>
-            <label className="text-sm font-medium text-white mb-1 block">
-              Reward
-            </label>
-            <input
-              type="text"
-              placeholder="e.g., Ice cream 🍦"
-              value={newReward}
-              onChange={(e) => setNewReward(e.target.value)}
-              className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
-            />
-          </div>
-
-          {/* Submit */}
-          <button
-            onClick={handleAddGoal}
-            className="w-full mt-4 py-3 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition-all"
-          >
-            <IconCirclePlus className="w-4 h-4" />
-            Add Goal
-          </button>
-        </div>
-      </div>
+      <GoalForm />
 
       {/* Goals List */}
       <div className="space-y-8">
