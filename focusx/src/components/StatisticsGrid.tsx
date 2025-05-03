@@ -18,7 +18,7 @@ interface Props {
 const StatisticsGrid = ({ activeGoal }: Props) => {
   const lastSession = {
     title: "Last Focus Session",
-    subtitle: "Duration",
+    subtitle: "Total Duration (No Breaks Included)",
     value: "2 hrs",
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,
   };

@@ -71,7 +71,7 @@ export const FocusTimer: React.FC = () => {
         <>
           <h2 className="text-3xl font-bold mb-6">Start a Focus Session</h2>
           <div className="flex flex-wrap justify-center gap-6 mb-8">
-            <TimeSelect label="Work (min)" value={minutes} onChange={setMinutes} options={[15, 20, 25, 30, 35, 40, 45, 60]} />
+            <TimeSelect label="Work (min)" value={minutes} onChange={setMinutes} options={[1, 15, 20, 25, 30, 35, 40, 45, 60]} />
             <TimeSelect label="Break (min)" value={breakMinutes} onChange={setBreakMinutes} options={[3, 5, 10, 15]} />
             <TimeSelect label="Sets" value={sets} onChange={setSets} options={[1, 2, 3, 4, 5]} />
           </div>

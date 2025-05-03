@@ -38,7 +38,7 @@ export function UserSidebar({ children }: Props) {
 
   return (
     <div
-      className="bg-neutral-950 mx-auto flex w-full h-screen xl:h-screen flex-1 flex-col overflow-hidden rounded-md
+      className="bg-neutral-950 mx-auto flex w-full h-screen flex-1 flex-col overflow-hidden rounded-md
           md:flex-row  "
     >
       <Sidebar animate={false}>

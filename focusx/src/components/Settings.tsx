@@ -3,7 +3,7 @@ import Input from "./Input";
 
 const Settings = () => {
   return (
-    <div className="bg-neutral-950 p-4 md:p-10 overflow-y-auto lg:min-w-4xl mx-auto text-neutral-200  space-y-12 ">
+    <div className="bg-neutral-950 p-4 md:p-10 overflow-y-auto lg:min-w-5xl mx-auto text-neutral-200  space-y-12 ">
       <div>
         <h1 className="text-4xl font-bold mb-2">Settings</h1>
         <p className="text-neutral-400">
@@ -24,7 +24,7 @@ const Settings = () => {
               type="text"
               placeholder="Enter new username"
             >
-              <button className="text-zinc-900 font-bold bg-white p-2 rounded-xl hover:cursor-pointer hover:bg-cyan-600 hover:text-white duration-300 ease-in-out">
+              <button className="text-zinc-900 font-bold bg-white p-2 rounded-xl hover:cursor-pointer hover:bg-green-600 hover:text-white duration-300 ease-in-out">
                 Save
               </button>
             </Input>
@@ -56,7 +56,7 @@ const Settings = () => {
             />
 
             <div className="flex justify-end">
-              <button className="text-zinc-900 font-bold bg-white px-6 py-2 rounded-xl hover:cursor-pointer hover:bg-cyan-600 hover:text-white duration-300 ease-in-out">
+              <button className="text-zinc-900 font-bold bg-white px-6 py-2 rounded-xl hover:cursor-pointer hover:bg-green-600 hover:text-white duration-300 ease-in-out">
                 Update Password
               </button>
             </div>

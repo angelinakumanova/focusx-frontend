@@ -25,7 +25,7 @@ export const CheckboxToggle = ({
           className="sr-only peer"
         />
         <IconCheck className="absolute z-50 text-white text-sm font-bold opacity-0 peer-checked:opacity-100 transition-opacity duration-200" />
-        <div className="w-5 h-5 border-2 border-neutral-600 rounded-md flex items-center justify-center peer-checked:bg-cyan-500 peer-checked:border-cyan-500 transition"></div>
+        <div className="w-5 h-5 border-2 border-neutral-600 rounded-md flex items-center justify-center peer-checked:bg-green-500 peer-checked:border-green-500 transition"></div>
       </label>
     </div>
   );
