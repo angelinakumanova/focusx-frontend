@@ -40,7 +40,7 @@ const NavBar = () => {
         <LinkScroll
           to="benefits"
           smooth={true}
-          offset={-250}
+          offset={-100}
           duration={1000}
           spy={true}
         >
@@ -83,3 +83,13 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+function scrollToCenter(id: string) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center", 
+    });
+  }
+}

@@ -23,7 +23,7 @@ const LoginForm = () => {
       </div>
 
       <motion.div
-        className="mt-42"
+        className="mt-20 xl:mt-42"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}

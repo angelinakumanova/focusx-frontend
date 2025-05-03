@@ -3,7 +3,7 @@ import Input from "./Input";
 
 const Settings = () => {
   return (
-    <div className="bg-neutral-950 h-full xl:min-w-5xl max-w-7xl mx-auto p-4 md:p-10  text-neutral-200 space-y-12 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-neutral-900 overflow-y-auto">
+    <div className="bg-neutral-950 p-4 md:p-10  text-neutral-200 space-y-12 ">
       <div>
         <h1 className="text-4xl font-bold mb-2">Settings</h1>
         <p className="text-neutral-400">
