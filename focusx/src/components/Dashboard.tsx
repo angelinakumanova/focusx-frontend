@@ -7,18 +7,21 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import GoalForm from "./GoalForm";
 import StatisticsGrid from "./StatisticsGrid";
+import Goal, { calculateProgress } from "@/interfaces/Goal";
 
 export default function Dashboard() {
-  const [goals, setGoals] = useState<any[]>([
-    {
-      title: "Daily Focus Habit",
-      type: "Streak",
-      streakDays: 5,
-      progress: 60,
-      reward: "Movie Night",
-      milestone: "Consistency",
-    },
-  ]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+
+  const addGoal = (newGoal: Goal) => {
+    setGoals((prevGoals) => [...prevGoals, newGoal]);
+
+    // Step 3: Send the new goal to the database
+    // You can make an API call to save the new goal in the database here
+    // Example: 
+    // fetch("/api/goals", { method: "POST", body: JSON.stringify(newGoal) })
+    //   .then(response => response.json())
+    //   .catch(error => console.error("Error saving goal:", error));
+  };
 
   const handleHighlightGoal = (index: number) => {
     setGoals((prevGoals) =>
@@ -29,24 +32,7 @@ export default function Dashboard() {
     );
   };
 
-  const activeGoal = goals.find((g) => g.isActive);
-
-  // const handleAddGoal = () => {
-  //   if (newGoal.trim() && newMilestone.trim() && newReward.trim()) {
-  //     setGoals([
-  //       ...goals,
-  //       {
-  //         title: newGoal,
-  //         milestone: newMilestone,
-  //         progress: 0,
-  //         reward: newReward,
-  //       },
-  //     ]);
-  //     setNewGoal("");
-  //     setNewMilestone("");
-  //     setNewReward("");
-  //   }
-  // };
+  const activeGoal = goals.find((g) => g.isActive) || null;
 
   // State for modal
   const [goalToRemove, setGoalToRemove] = useState<number>();
@@ -80,10 +66,11 @@ export default function Dashboard() {
       <StatisticsGrid activeGoal={activeGoal} />
 
       {/* New Goal Form */}
-      <GoalForm />
+      <GoalForm onSubmit={(goal) => addGoal(goal)} />
 
       {/* Goals List */}
       <div className="space-y-8">
+        <h1 className="text-3xl font-bold text-center">{goals.length > 1 ? '' : 'No goals'}</h1>
         {goals.map((goal, index) => (
           <div
             key={index}
@@ -108,31 +95,31 @@ export default function Dashboard() {
             <h3 className="text-lg font-semibold text-white mb-1">
               {goal.title}
             </h3>
-            <p className="text-gray-400 text-sm mb-1 italic">
-              {goal.milestone}
-            </p>
 
             <p className="text-xs text-gray-500 mb-3">
               Goal type: {goal.type}
               {goal.type === "Session" &&
-                ` • ${goal.sets} Set${goal.sets > 1 ? "s" : ""} of ${
+                ` • ${goal.sets} Set${goal.sets && goal.sets > 1 ? "s" : ""} of ${
                   goal.minutesPerSet
-                } Minute${goal.minutesPerSet > 1 ? "s" : ""}`}
+                } Minute${goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""}`}
+
+
               {goal.type === "Streak" &&
                 ` • ${goal.streakDays} Streak Day${
-                  goal.streakDays > 1 ? "s" : ""
+                  goal.streakDays && goal.streakDays > 1 ? "s" : ""
                 }`}
             </p>
 
             <div className="mb-4">
+          
               <div className="w-full h-3 bg-neutral-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-green-500 transition-all duration-300"
-                  style={{ width: `${goal.progress}%` }}
+                  style={{ width: `${calculateProgress(goal)}%` }}
                 />
               </div>
               <p className="text-right text-xs text-gray-500 mt-1">
-                {goal.progress}% completed
+                {calculateProgress(goal)}% completed
               </p>
             </div>
 

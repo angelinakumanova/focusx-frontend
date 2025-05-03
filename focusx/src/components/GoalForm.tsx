@@ -2,8 +2,13 @@ import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Goal from "@/interfaces/Goal";
 
-const GoalForm = () => {
+interface Props {
+  onSubmit: (goal: Goal) => void;
+}
+
+const GoalForm = ({onSubmit}: Props) => {
   const typeEnums = ["Session", "Streak"] as const;
 
   const goalSchema = z
@@ -12,13 +17,13 @@ const GoalForm = () => {
         .string({ message: "Please enter a title." })
         .min(1, { message: "Please enter a title." }),
       type: z.enum(typeEnums),
-      numberOfSessions: z
+      sets: z
         .number({
           invalid_type_error:
             "Please enter how many sessions you plan to complete.",
         })
         .optional(),
-      sessionDuration: z
+      minutesPerSet: z
         .number({
           invalid_type_error:
             "Please specify how long each session should be (in minutes).",
@@ -36,7 +41,7 @@ const GoalForm = () => {
     })
     .superRefine((data, ctx) => {
       if (data.type === "Session") {
-        if (data.numberOfSessions == null) {
+        if (data.sets == null) {
           ctx.addIssue({
             path: ["numberOfSessions"],
             code: z.ZodIssueCode.custom,
@@ -44,7 +49,7 @@ const GoalForm = () => {
           });
         }
 
-        if (data.sessionDuration == null) {
+        if (data.minutesPerSet == null) {
           ctx.addIssue({
             path: ["sessionDuration"],
             code: z.ZodIssueCode.custom,
@@ -95,6 +100,7 @@ const GoalForm = () => {
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
+          onSubmit(data as Goal);
           reset();
         })}
         className="grid gap-5"
@@ -155,14 +161,14 @@ const GoalForm = () => {
               </label>
               <input
                 type="number"
-                {...register("numberOfSessions", { valueAsNumber: true })}
+                {...register("sets", { valueAsNumber: true })}
                 placeholder="e.g., 5"
                 className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
               />
 
-              {errors.numberOfSessions && (
+              {errors.sets && (
                 <p className="text-red-600">
-                  {errors.numberOfSessions.message}
+                  {errors.sets.message}
                 </p>
               )}
             </div>
@@ -173,12 +179,12 @@ const GoalForm = () => {
               <input
                 type="number"
                 placeholder="e.g., 60"
-                {...register("sessionDuration", { valueAsNumber: true })}
+                {...register("minutesPerSet", { valueAsNumber: true })}
                 className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
               />
 
-              {errors.sessionDuration && (
-                <p className="text-red-600">{errors.sessionDuration.message}</p>
+              {errors.minutesPerSet && (
+                <p className="text-red-600">{errors.minutesPerSet.message}</p>
               )}
             </div>
           </>
