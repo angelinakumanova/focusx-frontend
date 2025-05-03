@@ -2,14 +2,16 @@ import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Goal from "@/interfaces/Goal";
+import Goal, { typeEnums } from "@/interfaces/Goal";
+import SessionGoal from "@/interfaces/SessionGoal";
+import StreakGoal from "@/interfaces/StreakGoal";
 
 interface Props {
   onSubmit: (goal: Goal) => void;
 }
 
 const GoalForm = ({onSubmit}: Props) => {
-  const typeEnums = ["Session", "Streak"] as const;
+  
 
   const goalSchema = z
     .object({
@@ -100,6 +102,12 @@ const GoalForm = ({onSubmit}: Props) => {
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
+          if (data.type === 'Session') {
+            data = data as SessionGoal;
+          } else if (data.type === 'Streak') {
+            data = data as StreakGoal;
+          }
+          
           onSubmit(data as Goal);
           reset();
         })}

@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@/lib/utils";
 import {
   IconAlarm,
   IconArrowLeft,
@@ -39,7 +38,7 @@ export function UserSidebar({ children }: Props) {
   return (
     <div
       className="bg-neutral-950 mx-auto flex w-full h-screen flex-1 flex-col overflow-hidden rounded-md
-          md:flex-row  "
+          md:flex-row"
     >
       <Sidebar animate={false}>
         <SidebarBody className="rounded-2xl border border-zinc-900 ">
