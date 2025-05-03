@@ -7,7 +7,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:global(body) {
+html, div {
   @apply scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-neutral-900;
 }
 
