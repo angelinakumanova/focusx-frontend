@@ -3,26 +3,23 @@ import { motion } from "motion/react";
 interface Props {
   title: string;
   confirmText: string;
-  cancelText: string;
   toggleVisibility: () => void;
-  isOpen: boolean;
+  confirmFn: () => void;
 }
 
 const PopUpModal = ({
   title,
   confirmText,
-  cancelText,
   toggleVisibility,
-  isOpen,
+  confirmFn,
 }: Props) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
+      exit={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4 ${
-        isOpen ? "" : "hidden"
-      }`}
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4"
     >
       <div className="bg-neutral-900 text-white rounded-2xl shadow-xl p-6 w-full max-w-sm">
         <h2 className="text-xl font-semibold mb-3">{title}</h2>
@@ -32,14 +29,17 @@ const PopUpModal = ({
 
         <div className="flex justify-end gap-3">
           <button
-            className="px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors text-sm"
-            onClick={toggleVisibility}
+            className="px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 hover:cursor-pointer transition-colors text-sm"
+            onClick={() => toggleVisibility()}
           >
-            {cancelText}
+            Cancel
           </button>
           <button
-            className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 transition-colors text-sm"
-            onClick={toggleVisibility}
+            className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 hover:cursor-pointer transition-colors text-sm"
+            onClick={() => {
+              toggleVisibility();
+              confirmFn();
+            }}
           >
             {confirmText}
           </button>

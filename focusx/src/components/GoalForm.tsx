@@ -232,13 +232,19 @@ const GoalForm = () => {
         {/* Submit */}
         <button
           type="submit"
-          disabled={goalsLength > 5}
+          disabled={goalsLength >= 5}
           className="w-full mt-4 py-3 flex items-center justify-center gap-2
           bg-green-600 hover:bg-green-500 hover:cursor-pointer text-white
-          text-sm font-medium rounded-lg transition-all disabled:bg-red-600"
+          text-sm font-medium rounded-lg transition-all disabled:bg-red-600 disabled:hover:cursor-default"
         >
-          <IconCirclePlus className="w-4 h-4" />
-          {goalsLength >= 5 ? 'You can\'t add more goals' : 'Add Goal'}
+          {goalsLength >= 5 ? (
+            <p>You can't add more goals</p>
+          ) : (
+            <>
+              <IconCirclePlus className="w-4 h-4" />
+              Add Goal
+            </>
+          )}
         </button>
       </form>
     </div>

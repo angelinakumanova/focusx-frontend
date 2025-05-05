@@ -5,17 +5,22 @@ import StreakGoal from "@/interfaces/StreakGoal";
 import { IconGift, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import PopUpModal from "./PopUpModal";
+import { AnimatePresence, motion } from "motion/react";
 
 interface Props {
   goal: Goal;
 }
 
 const GoalsListItem = ({ goal }: Props) => {
-  const { activeGoal, setActiveGoal } = useGoalStore();
-  const [isOpen, toggleModalVisibility] = useState(false);
+  const { activeGoal, setActiveGoal, removeGoal } = useGoalStore();
+  const [isModalOpen, setModalVisibility] = useState(false);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      exit={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.1 }}
       className={`mb-5 bg-neutral-900 p-6 rounded-xl shadow-sm border  relative transition-all duration-300 ${
         goal === activeGoal ? "border-green-600" : "border-neutral-800"
       }`}
@@ -32,7 +37,10 @@ const GoalsListItem = ({ goal }: Props) => {
           {goal === activeGoal ? "Tracking This Goal" : "Track This Goal"}
         </button>
 
-        <button className="hover:cursor-pointer hover:scale-110 transition-all duration-200" onClick={() => toggleModalVisibility(!isOpen)}>
+        <button
+          className="hover:cursor-pointer hover:scale-110 transition-all duration-200"
+          onClick={() => setModalVisibility(!isModalOpen)}
+        >
           <IconX />
         </button>
       </div>
@@ -74,16 +82,19 @@ const GoalsListItem = ({ goal }: Props) => {
         <span className="text-white">{goal.reward}</span>
       </div>
 
-      {isOpen && (
-        <PopUpModal
-          title={`Are you sure you want to delete "${goal.title}"`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          isOpen={isOpen}
-          toggleVisibility={() => toggleModalVisibility(!isOpen)}
-        />
-      )}
-    </div>
+      <AnimatePresence>
+        {isModalOpen ? (
+          <PopUpModal
+            title={`Are you sure you want to delete "${goal.title}"`}
+            confirmText="Delete"
+            confirmFn={() => {
+              removeGoal(goal);
+            }}
+            toggleVisibility={() => setModalVisibility(!isModalOpen)}
+          />
+        ) : null}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
