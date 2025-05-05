@@ -3,19 +3,17 @@ import BenefitsList from "./BenefitsList";
 import SectionDivider from "./SectionDivider";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import { useSectionStore } from "@/useSectionStore";
-
-
+import { useSectionStore } from "@/hooks/useSectionStore";
 
 const BenefitsSection = () => {
-  const setActiveSection = useSectionStore((s) => s.setActiveSection)
-  const { ref, inView } = useInView({ threshold: 0.5 })
+  const setActiveSection = useSectionStore((s) => s.setActiveSection);
+  const { ref, inView } = useInView({ threshold: 0.5 });
 
-  const id = 'benefits';
+  const id = "benefits";
 
   useEffect(() => {
-    if (inView) setActiveSection(id)
-  }, [inView, id, setActiveSection])
+    if (inView) setActiveSection(id);
+  }, [inView, id, setActiveSection]);
 
   return (
     <>

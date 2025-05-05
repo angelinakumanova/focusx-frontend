@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { FlipWords } from "../ui/flip-words";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import { useSectionStore } from "@/useSectionStore";
+import { useSectionStore } from "@/hooks/useSectionStore";
 import { DotBackground } from "../ui/dot-background";
 
 const LandingSection = () => {

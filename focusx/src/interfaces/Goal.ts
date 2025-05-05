@@ -4,5 +4,4 @@ export default interface Goal {
     title: string;
     type: (typeof typeEnums[number]);
     reward: string;
-    isActive: boolean;
 }

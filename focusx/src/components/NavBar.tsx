@@ -3,7 +3,7 @@ import Logo from "./Logo";
 import { Button } from "./ui/moving-border";
 import { Link } from "react-router-dom";
 import { Link as LinkScroll } from "react-scroll";
-import { useSectionStore } from "@/useSectionStore";
+import { useSectionStore } from "@/hooks/useSectionStore";
 
 const style =
   "px-3 font-bold transition-all duration-300 ease-in-out hover:cursor-pointer hover:rounded-full hover:bg-[#3f3f46]";
@@ -89,7 +89,7 @@ function scrollToCenter(id: string) {
   if (element) {
     element.scrollIntoView({
       behavior: "smooth",
-      block: "center", 
+      block: "center",
     });
   }
 }

@@ -1,4 +1,4 @@
-import Goal from "@/interfaces/Goal";
+import { useGoalStore } from "@/hooks/useGoalStore";
 import { IconCircleCheck, IconClock, IconFlame } from "@tabler/icons-react";
 import { JSX } from "react";
 
@@ -11,11 +11,9 @@ type GridItem = {
   progressValue?: number;
 };
 
-interface Props {
-  activeGoal: Goal | null;
-}
+const StatisticsGrid = () => {
+  const activeGoal = useGoalStore(s => s.activeGoal);
 
-const StatisticsGrid = ({ activeGoal }: Props) => {
   const lastSession = {
     title: "Last Focus Session",
     subtitle: "Total Duration (No Breaks Included)",

@@ -1,17 +1,15 @@
-import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Goal, { typeEnums } from "@/interfaces/Goal";
+import { useGoalStore } from "@/hooks/useGoalStore";
+import { typeEnums } from "@/interfaces/Goal";
 import SessionGoal from "@/interfaces/SessionGoal";
 import StreakGoal from "@/interfaces/StreakGoal";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-interface Props {
-  onSubmit: (goal: Goal) => void;
-}
-
-const GoalForm = ({onSubmit}: Props) => {
-  
+const GoalForm = () => {
+  const addGoal = useGoalStore((s) => s.addGoal);
+  const goalsLength = useGoalStore((s) => s.goals).length;
 
   const goalSchema = z
     .object({
@@ -102,13 +100,13 @@ const GoalForm = ({onSubmit}: Props) => {
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
-          if (data.type === 'Session') {
+          if (data.type === "Session") {
             data = data as SessionGoal;
-          } else if (data.type === 'Streak') {
+          } else if (data.type === "Streak") {
             data = data as StreakGoal;
           }
-          
-          onSubmit(data as Goal);
+
+          addGoal(data);
           reset();
         })}
         className="grid gap-5"
@@ -175,9 +173,7 @@ const GoalForm = ({onSubmit}: Props) => {
               />
 
               {errors.sets && (
-                <p className="text-red-600">
-                  {errors.sets.message}
-                </p>
+                <p className="text-red-600">{errors.sets.message}</p>
               )}
             </div>
             <div>
@@ -236,10 +232,13 @@ const GoalForm = ({onSubmit}: Props) => {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full mt-4 py-3 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 hover:cursor-pointer text-white text-sm font-medium rounded-lg transition-all"
+          disabled={goalsLength > 5}
+          className="w-full mt-4 py-3 flex items-center justify-center gap-2
+          bg-green-600 hover:bg-green-500 hover:cursor-pointer text-white
+          text-sm font-medium rounded-lg transition-all disabled:bg-red-600"
         >
           <IconCirclePlus className="w-4 h-4" />
-          Add Goal
+          {goalsLength >= 5 ? 'You can\'t add more goals' : 'Add Goal'}
         </button>
       </form>
     </div>
