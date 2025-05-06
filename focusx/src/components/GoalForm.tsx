@@ -99,9 +99,13 @@ const GoalForm = () => {
 
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+
           if (data.type === "Session") {
-            data = data as SessionGoal;
+            data = {
+              ...data,
+              completedSets: 0,
+              completedMinutes: 0,
+            } as SessionGoal;
           } else if (data.type === "Streak") {
             data = data as StreakGoal;
           }

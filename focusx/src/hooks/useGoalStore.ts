@@ -6,7 +6,7 @@ type GoalStore = {
   activeGoal: Goal | null;
   addGoal: (goal: Goal) => void;
   removeGoal: (goal: Goal) => void;
-  setActiveGoal: (goal: Goal) => void;
+  setActiveGoal: (goal: Goal | null) => void;
 };
 
 export const useGoalStore = create<GoalStore>((set) => ({
@@ -17,6 +17,15 @@ export const useGoalStore = create<GoalStore>((set) => ({
       reward: "Chocolate",
       sets: 5,
       minutesPerSet: 50,
+      completedMinutes: 50,
+    },
+    {
+      title: "Test",
+      type: "Session",
+      reward: "Chocolate",
+      sets: 5,
+      minutesPerSet: 50,
+      completedMinutes: 250,
     },
   ],
   activeGoal: null,

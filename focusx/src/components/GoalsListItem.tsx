@@ -15,12 +15,15 @@ const GoalsListItem = ({ goal }: Props) => {
   const { activeGoal, setActiveGoal, removeGoal } = useGoalStore();
   const [isModalOpen, setModalVisibility] = useState(false);
 
+  // TODO: Change to goal id
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      exit={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.1 }}
+      layout
+      key={goal.title}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       className={`mb-5 bg-neutral-900 p-6 rounded-xl shadow-sm border  relative transition-all duration-300 ${
         goal === activeGoal ? "border-green-600" : "border-neutral-800"
       }`}
@@ -58,7 +61,11 @@ const GoalsListItem = ({ goal }: Props) => {
         {isSessionGoal(goal) &&
           ` ${goal.sets} Set${goal.sets && goal.sets > 1 ? "s" : ""} of ${
             goal.minutesPerSet
-          } Minute${goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""}`}
+          } Minute${
+            goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""
+          } or ${goal.sets * goal.minutesPerSet} Minute${
+            goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""
+          }`}
         {isStreakGoal(goal) &&
           ` ${goal.streakDays} Streak Day${
             goal.streakDays && goal.streakDays > 1 ? "s" : ""
@@ -69,10 +76,10 @@ const GoalsListItem = ({ goal }: Props) => {
         <div className="w-full h-3 bg-neutral-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-green-500 transition-all duration-300"
-            style={{ width: "50%" }}
+            style={{ width: `${calculateProgress(goal)}%` }}
           />
         </div>
-        <p className="text-right text-xs text-gray-500 mt-1">50% completed</p>
+        <p className="text-right text-xs text-gray-500 mt-1">{calculateProgress(goal)}% completed</p>
       </div>
 
       <div className="flex gap-2 items-center text-sm text-gray-400">
@@ -82,17 +89,19 @@ const GoalsListItem = ({ goal }: Props) => {
         <span className="text-white">{goal.reward}</span>
       </div>
 
-      <AnimatePresence>
-        {isModalOpen ? (
+      <AnimatePresence mode="wait">
+        {isModalOpen && (
           <PopUpModal
             title={`Are you sure you want to delete "${goal.title}"`}
             confirmText="Delete"
             confirmFn={() => {
               removeGoal(goal);
+
+              if (activeGoal === goal) setActiveGoal(null);
             }}
             toggleVisibility={() => setModalVisibility(!isModalOpen)}
           />
-        ) : null}
+        )}
       </AnimatePresence>
     </motion.div>
   );
@@ -106,4 +115,12 @@ function isSessionGoal(goal: Goal): goal is SessionGoal {
 
 function isStreakGoal(goal: Goal): goal is StreakGoal {
   return goal.type === "Streak";
+}
+
+export function calculateProgress(goal: Goal) {
+  if (isSessionGoal(goal)) {
+   return (goal.completedMinutes / (goal.minutesPerSet * goal.sets) ) * 100;
+  } else if (isStreakGoal(goal)) {
+    return (goal.streakDays / goal.completedStreakDays) * 100;
+  }
 }

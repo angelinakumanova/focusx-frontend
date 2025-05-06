@@ -1,6 +1,7 @@
 import { useGoalStore } from "@/hooks/useGoalStore";
 import { IconCircleCheck, IconClock, IconFlame } from "@tabler/icons-react";
 import { JSX } from "react";
+import { calculateProgress } from "./GoalsListItem";
 
 type GridItem = {
   title: string;
@@ -12,7 +13,7 @@ type GridItem = {
 };
 
 const StatisticsGrid = () => {
-  const activeGoal = useGoalStore(s => s.activeGoal);
+  const activeGoal = useGoalStore((s) => s.activeGoal);
 
   const lastSession = {
     title: "Last Focus Session",
@@ -31,15 +32,13 @@ const StatisticsGrid = () => {
   const goal = {
     title: "Goal Progress",
     subtitle: activeGoal ? activeGoal.title : "No Active Goal",
-    value: activeGoal ? `50%` : "--",
+    value: activeGoal ? `${calculateProgress(activeGoal)}%` : "--",
     icon: <IconCircleCheck className="w-5 h-5 text-green-500" />,
     isProgress: true,
-    progressValue: activeGoal ? 50 : 0,
+    progressValue: activeGoal ? calculateProgress(activeGoal) : 0,
   };
 
   const items: GridItem[] = [lastSession, currentStreak, goal];
-
- 
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
@@ -48,10 +47,8 @@ const StatisticsGrid = () => {
           key={i}
           className="relative bg-neutral-900 p-5 rounded-xl shadow-md overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
         >
-          {/* Accent Border */}
           <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-neutral-500 to-neutral-700 rounded-l-xl" />
 
-          {/* Icon Top-Right */}
           <div className="absolute top-4 right-4">{item.icon}</div>
 
           {/* Card Content */}
@@ -70,7 +67,6 @@ const StatisticsGrid = () => {
                 </span>
               </div>
 
-              {/* Optional Progress Bar */}
               {item.isProgress && (
                 <div className="mt-3 h-2 bg-neutral-700 rounded-full overflow-hidden">
                   <div
