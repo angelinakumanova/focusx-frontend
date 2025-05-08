@@ -23,7 +23,7 @@ const FocusTimer = () => {
     startTimer,
     stopTimer,
     isCompleted,
-    setIsCompleted
+    setIsCompleted,
   } = useFocusTimer({ minutes, breakMinutes, sets });
 
   return (
@@ -78,7 +78,12 @@ const FocusTimer = () => {
               value={breakMinutes}
               onChange={setBreakMinutes}
             />
-            <TimeSelect label="Sets" value={sets} onChange={setSets} />
+            <TimeSelect
+              max={20}              
+              label="Sets"
+              value={sets}
+              onChange={setSets}
+            />
           </div>
           <button
             onClick={startTimer}
@@ -99,4 +104,3 @@ const FocusTimer = () => {
 };
 
 export default FocusTimer;
-

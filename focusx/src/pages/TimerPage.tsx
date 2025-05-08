@@ -1,4 +1,4 @@
-import { FocusTimer } from "@/components/timer/Timer";
+import FocusTimer from "@/components/timer/Timer";
 import { UserSidebar } from "@/components/UserSidebar";
 
 const TimerPage = () => {

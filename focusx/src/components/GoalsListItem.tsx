@@ -56,21 +56,7 @@ const GoalsListItem = ({ goal }: Props) => {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mb-3">
-        Goal type:
-        {isSessionGoal(goal) &&
-          ` ${goal.sets} Set${goal.sets && goal.sets > 1 ? "s" : ""} of ${
-            goal.minutesPerSet
-          } Minute${
-            goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""
-          } or ${goal.sets * goal.minutesPerSet} Minute${
-            goal.minutesPerSet && goal.minutesPerSet > 1 ? "s" : ""
-          }`}
-        {isStreakGoal(goal) &&
-          ` ${goal.streakDays} Streak Day${
-            goal.streakDays && goal.streakDays > 1 ? "s" : ""
-          }`}
-      </p>
+      <p className="text-xs text-gray-500 mb-3">{GoalSummary(goal)}</p>
 
       <div className="mb-4">
         <div className="w-full h-3 bg-neutral-800 rounded-full overflow-hidden">
@@ -79,7 +65,9 @@ const GoalsListItem = ({ goal }: Props) => {
             style={{ width: `${calculateProgress(goal)}%` }}
           />
         </div>
-        <p className="text-right text-xs text-gray-500 mt-1">{calculateProgress(goal)}% completed</p>
+        <p className="text-right text-xs text-gray-500 mt-1">
+          {calculateProgress(goal)}% completed
+        </p>
       </div>
 
       <div className="flex gap-2 items-center text-sm text-gray-400">
@@ -117,9 +105,37 @@ function isStreakGoal(goal: Goal): goal is StreakGoal {
   return goal.type === "Streak";
 }
 
+const formatGoal = (goal: Goal) => {
+  if (isSessionGoal(goal)) {
+    const { sets, minutesPerSet } = goal;
+    const totalMinutes = sets * minutesPerSet;
+    const totalFormatted = formatMinutesToHoursAndMinutes(totalMinutes);
+
+    return `${sets} Set${sets > 1 ? "s" : ""} of ${minutesPerSet} Minute${
+      minutesPerSet > 1 ? "s" : ""
+    } or ${totalFormatted}`;
+  }
+
+  if (isStreakGoal(goal)) {
+    return `${goal.streakDays} Streak Day${goal.streakDays > 1 ? "s" : ""}`;
+  }
+
+  return "";
+};
+
+const formatMinutesToHoursAndMinutes = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  const hStr = hours > 0 ? `${hours}h` : "";
+  const mStr = remainingMinutes > 0 ? `${remainingMinutes}m` : "";
+  return [hStr, mStr].filter(Boolean).join(" ");
+};
+
+const GoalSummary = (goal: Goal) => `Goal type: ${formatGoal(goal)}`;
+
 export function calculateProgress(goal: Goal) {
   if (isSessionGoal(goal)) {
-   return (goal.completedMinutes / (goal.minutesPerSet * goal.sets) ) * 100;
+    return (goal.completedMinutes / (goal.minutesPerSet * goal.sets)) * 100;
   } else if (isStreakGoal(goal)) {
     return (goal.streakDays / goal.completedStreakDays) * 100;
   }
