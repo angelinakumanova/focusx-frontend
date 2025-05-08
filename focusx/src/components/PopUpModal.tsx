@@ -22,7 +22,7 @@ const PopUpModal = ({
       exit={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
     >
       <div className="text-left bg-neutral-900 text-white rounded-2xl shadow-xl p-6 w-full max-w-sm">
         <h2 className="text-xl font-semibold mb-3 ">{title}</h2>
