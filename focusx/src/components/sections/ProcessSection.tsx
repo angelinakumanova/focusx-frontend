@@ -1,8 +1,9 @@
-import { motion } from "motion/react";
-import SectionDivider from "./SectionDivider";
-import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
 import { useSectionStore } from "@/hooks/useSectionStore";
+import { motion } from "motion/react";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import SectionDivider from "./SectionDivider";
+import ProcessCarousel from "./ProcessCarousel";
 
 const ProcessSection = () => {
   const setActiveSection = useSectionStore((s) => s.setActiveSection);
@@ -28,21 +29,11 @@ const ProcessSection = () => {
               FocusX in Action
             </h1>
             <p className="text-xl text-center opacity-80">
-              Get addicted to progress, not distraction.
+              Peek inside the system that keeps you coming back.
             </p>
           </div>
 
-          <div className="text-xl max-w-7xl mx-auto">
-            <h1 className="font-bold text-2xl">Why FocusX? </h1>
-            <p>
-              It is a powerful tool designed to help individuals unlock their
-              potential by enhancing their focus and productivity. Users can set
-              up personalized rewards for milestones reached, making progress
-              more enjoyable and tangible. With this unique approach, FocusX
-              transforms your productivity journey into one that's not only
-              effective but also rewarding.
-            </p>
-          </div>
+          <ProcessCarousel />
         </div>
       </motion.div>
     </>

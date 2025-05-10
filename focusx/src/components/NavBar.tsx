@@ -1,9 +1,9 @@
+import { useSectionStore } from "@/hooks/useSectionStore";
 import { motion } from "motion/react";
-import Logo from "./Logo";
-import { Button } from "./ui/moving-border";
 import { Link } from "react-router-dom";
 import { Link as LinkScroll } from "react-scroll";
-import { useSectionStore } from "@/hooks/useSectionStore";
+import Logo from "./Logo";
+import { Button } from "./ui/moving-border";
 
 const style =
   "px-3 font-bold transition-all duration-300 ease-in-out hover:cursor-pointer hover:rounded-full hover:bg-[#3f3f46]";
@@ -40,7 +40,7 @@ const NavBar = () => {
         <LinkScroll
           to="benefits"
           smooth={true}
-          offset={-100}
+          offset={-150}
           duration={1000}
           spy={true}
         >
@@ -57,6 +57,7 @@ const NavBar = () => {
           to="process"
           smooth={true}
           duration={1000}
+          offset={-80}
           activeClass="active-link"
           spy={true}
         >
@@ -83,13 +84,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-function scrollToCenter(id: string) {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }
-}

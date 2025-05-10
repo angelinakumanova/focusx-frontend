@@ -135,8 +135,8 @@ const GoalSummary = (goal: Goal) => `Goal type: ${formatGoal(goal)}`;
 
 export function calculateProgress(goal: Goal) {
   if (isSessionGoal(goal)) {
-    return (goal.completedMinutes / (goal.minutesPerSet * goal.sets)) * 100;
+    return ((goal.completedMinutes / (goal.minutesPerSet * goal.sets)) * 100).toFixed(0);
   } else if (isStreakGoal(goal)) {
-    return (goal.streakDays / goal.completedStreakDays) * 100;
+    return ((goal.streakDays / goal.completedStreakDays) * 100).toFixed(0);
   }
 }

@@ -12,12 +12,12 @@ type GoalStore = {
 export const useGoalStore = create<GoalStore>((set) => ({
   goals: [
     {
-      title: "Test",
+      title: "Learn Italian",
       type: "Session",
-      reward: "Chocolate",
+      reward: "Ice Cream",
       sets: 5,
-      minutesPerSet: 50,
-      completedMinutes: 50,
+      minutesPerSet: 60,
+      completedMinutes: 320,
     },
     {
       title: "Test",
