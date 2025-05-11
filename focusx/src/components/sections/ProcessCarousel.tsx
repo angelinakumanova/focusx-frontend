@@ -5,11 +5,12 @@ const ProcessCarousel = () => {
     {
       title: 'Set up your goal',
       src: "/src/assets/videos/setting-up-a-goal.mp4",
-      width: 'w-[65%]'
+      width: 'w-[60%]'
     },
     {
       title: 'Track your goals and earn rewards!',
       src: "/src/assets/videos/track-goal.mp4",
+      height: 'w-[75%]'
     },
   ];
   return (

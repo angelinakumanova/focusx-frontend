@@ -22,6 +22,7 @@ const ProcessSection = () => {
         initial={{ opacity: 0, y: -50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeInOut" }}
+        className="hidden md:block"
       >
         <div id={id} ref={ref} className="p-4 lg:p-0 my-40 min-h-[50vh]">
           <div className="my-10">
