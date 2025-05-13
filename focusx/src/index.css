@@ -133,6 +133,7 @@ html {
 
 body {
   background-color: black;
+  overflow-x: hidden;
   color: white;
   font-family: "Inter", sans-serif;
   font-weight: 400;

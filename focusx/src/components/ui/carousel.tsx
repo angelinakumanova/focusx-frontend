@@ -132,7 +132,7 @@ export default function Carousel({ slides }: CarouselProps) {
   return (
     <div className="relative mx-auto max-w-fit">
       <ul
-        className=" flex  transition-transform duration-1000 ease-in-out"
+        className="flex transition-transform duration-1000 ease-in-out"
         style={{
           width: `${slides.length * 100}%`,
           transform: `translateX(-${current * (100 / slides.length)}%)`,

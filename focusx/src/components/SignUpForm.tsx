@@ -1,22 +1,46 @@
 "use client";
 import { Input } from "@/components/ui/auth-input";
 import { Label } from "@/components/ui/auth-label";
-import { motion } from "motion/react";
-import React from "react";
-import { Link } from "react-router-dom";
-import Logo from "./Logo";
+import { axiosInstance } from "@/services/apiClient";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { IconArrowRight } from "@tabler/icons-react";
+import { motion } from "motion/react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
+import Logo from "./Logo";
 
 const inputStyle =
-  "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
+  "text-white bg-zinc-700 ";
 const labelStyle = "text-white font-bold text-base";
 
 export default function SignUpForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
+  const schema = z
+    .object({
+      username: z
+        .string({ message: "Please enter a username" })
+        .min(1, { message: "Please enter a username" }),
+      email: z.string().email({ message: "Invalid email" }),
+      password: z.string().min(6),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+
+  type FormData = z.infer<typeof schema>;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
   return (
     <>
       <div className="flex justify-center">
@@ -34,8 +58,15 @@ export default function SignUpForm() {
         </h2>
 
         <form
-          className="mx-auto w-full max-w-md  drop-shadow-2xl drop-shadow-chart-3 my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8 "
-          onSubmit={handleSubmit}
+          className="mx-auto w-full max-w-md drop-shadow-2xl drop-shadow-chart-3
+          my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8"
+          onSubmit={handleSubmit((data) => {
+            axiosInstance
+              .post("/register", data)
+              .then(() => reset())
+              .catch((error) => console.log(error));
+
+          })}
         >
           <div className="mb-4">
             <Label htmlFor="username" className={labelStyle}>
@@ -46,7 +77,11 @@ export default function SignUpForm() {
               placeholder="johnDoe"
               type="text"
               className={inputStyle}
+              {...register("username")}
             />
+            {errors.username && (
+              <p className="text-red-600">{errors.username.message}</p>
+            )}
           </div>
           <div className="mb-4">
             <Label htmlFor="email" className={labelStyle}>
@@ -57,7 +92,12 @@ export default function SignUpForm() {
               placeholder="john.doe@example.com"
               type="email"
               className={inputStyle}
+              {...register("email")}
             />
+
+            {errors.email && (
+              <p className="text-red-600">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -69,7 +109,11 @@ export default function SignUpForm() {
               placeholder="••••••••"
               type="password"
               className={inputStyle}
+              {...register("password")}
             />
+            {errors.password && (
+              <p className="text-red-600">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="mb-8">
@@ -81,7 +125,11 @@ export default function SignUpForm() {
               placeholder="••••••••"
               type="password"
               className={inputStyle}
+              {...register("confirmPassword")}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-600">{errors.confirmPassword.message}</p>
+            )}
           </div>
 
           <button
