@@ -5,16 +5,15 @@ import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { BottomGradient } from "./BottomGradient";
+import { useForm } from "react-hook-form";
+import { axiosInstance } from "@/services/apiClient";
 
 const inputStyle =
   "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
 const labelStyle = "text-white font-bold text-base";
 
 const LoginForm = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
+  const { register, handleSubmit, reset } = useForm();
 
   return (
     <>
@@ -34,20 +33,30 @@ const LoginForm = () => {
 
         <form
           className="mx-auto w-full max-w-md  drop-shadow-2xl drop-shadow-chart-3 my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8 "
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit((data) => {
+
+            axiosInstance
+              .post("/login", data)
+              .then((res) => {
+                reset();
+                console.log(res);
+                
+              })
+              .catch((error) => console.log(error));
+          })}
         >
           <div className="mb-4">
             <Label htmlFor="username" className={labelStyle}>
               Username
             </Label>
-            <Input id="username" type="text" className={inputStyle} />
+            <Input id="username" type="text" className={inputStyle} {...register('username')} />
           </div>
 
           <div className="mb-4">
             <Label htmlFor="password" className={labelStyle}>
               Password
             </Label>
-            <Input id="password" type="password" className={inputStyle} />
+            <Input id="password" type="password" className={inputStyle} {...register('password')} />
           </div>
 
           <button
