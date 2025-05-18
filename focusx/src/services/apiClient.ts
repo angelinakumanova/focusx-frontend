@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080"
+  baseURL: "http://localhost:8080/api",
+  withCredentials: true
 });
 
 class APIClient<T> {

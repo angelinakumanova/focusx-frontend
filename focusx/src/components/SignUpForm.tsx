@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IconArrowRight } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
@@ -41,6 +41,8 @@ export default function SignUpForm() {
     resolver: zodResolver(schema),
   });
 
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="flex justify-center">
@@ -62,8 +64,11 @@ export default function SignUpForm() {
           my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8"
           onSubmit={handleSubmit((data) => {
             axiosInstance
-              .post("/register", data)
-              .then(() => reset())
+              .post("/auth/register", data)
+              .then(() => {
+                reset();
+                navigate('/login');
+              })
               .catch((error) => console.log(error));
 
           })}

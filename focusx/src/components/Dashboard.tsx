@@ -2,8 +2,10 @@ import { motion } from "framer-motion";
 import GoalForm from "./GoalForm";
 import GoalsList from "./GoalsList";
 import StatisticsGrid from "./StatisticsGrid";
+import { useAuthStore } from "@/context/useAuthStore";
 
 export default function Dashboard() {
+  const { user } = useAuthStore();
   
 
   return (
@@ -16,7 +18,7 @@ export default function Dashboard() {
         className="text-center mb-16"
       >
         <h1 className="text-3xl font-bold sm:text-4xl  mb-2">
-          Welcome back, angiek!
+          Welcome back, {user?.username}!
         </h1>
         <p className="text-gray-400 text-sm sm:text-base">
           What will you focus on today?
