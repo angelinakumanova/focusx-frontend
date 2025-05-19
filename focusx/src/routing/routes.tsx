@@ -7,15 +7,21 @@ import HomePage from "../pages/HomePage";
 import SettingsPage from "../pages/SettingsPage";
 import TimerPage from "../pages/TimerPage";
 import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <LandingPage /> },
-      { path: "register", element: <SignUpForm /> },
-      { path: "login", element: <LoginForm /> },
+      {
+        element: <PublicRoute />,
+       children:[ 
+        { index: true, element: <LandingPage /> },
+        { path: "register", element: <SignUpForm /> },
+        { path: "login", element: <LoginForm /> },]
+    },
+
 
       // Protected routes
       {
