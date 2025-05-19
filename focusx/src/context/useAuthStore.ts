@@ -9,6 +9,7 @@ interface User {
 interface AuthState {
   user: User | null;
   isRefreshed: boolean;
+  loading: boolean;
   login: (data: FieldValues) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -17,10 +18,14 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isRefreshed: false,
+  loading: false,
 
   login: async (data) => {
+    set({ loading: true });
     await axiosInstance.post("/auth/login", data, { withCredentials: true });
     getUser(set);
+    
+    set({ loading: false });
   },
 
   logout: async () => {

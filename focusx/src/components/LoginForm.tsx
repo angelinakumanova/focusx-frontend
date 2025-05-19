@@ -18,12 +18,14 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const handleLogin = (data: FieldValues) => {
+
     try {
       login(data);
       navigate('/home');
     } catch (err) {
       reset();
     }
+
   }
 
   return (

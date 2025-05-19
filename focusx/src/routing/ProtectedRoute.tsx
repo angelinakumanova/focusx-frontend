@@ -3,9 +3,9 @@ import { useAuthStore } from "@/context/useAuthStore";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const {user, isRefreshed} = useAuthStore();
+  const {user, isRefreshed, loading} = useAuthStore();
 
-  if (!isRefreshed) {
+  if (!isRefreshed || loading) {
     return <LoadingScreen />
   }
 
