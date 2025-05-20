@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/auth-input";
 import { Label } from "@/components/ui/auth-label";
-import { axiosInstance } from "@/services/apiClient";
+import api from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconArrowRight } from "@tabler/icons-react";
 import { motion } from "motion/react";
@@ -11,8 +11,7 @@ import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
 
-const inputStyle =
-  "text-white bg-zinc-700 ";
+const inputStyle = "text-white bg-zinc-700 ";
 const labelStyle = "text-white font-bold text-base";
 
 export default function SignUpForm() {
@@ -63,14 +62,13 @@ export default function SignUpForm() {
           className="mx-auto w-full max-w-md drop-shadow-2xl drop-shadow-chart-3
           my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8"
           onSubmit={handleSubmit((data) => {
-            axiosInstance
+            api
               .post("/auth/register", data)
               .then(() => {
                 reset();
-                navigate('/login');
+                navigate("/login");
               })
               .catch((error) => console.log(error));
-
           })}
         >
           <div className="mb-4">

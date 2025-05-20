@@ -158,10 +158,12 @@ export const MobileSidebar = ({
 export const SidebarLink = ({
   link,
   className,
+  onClick,
   ...props
 }: {
   link: Links;
   className?: string;
+  onClick?: () => void;
 }) => {
   const { open, animate } = useSidebar();
   return (
@@ -174,6 +176,7 @@ export const SidebarLink = ({
           className
         )
       }
+      onClick={onClick}
       {...props}
     >
       {link.icon}

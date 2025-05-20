@@ -40,16 +40,18 @@ const Settings = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Change Username</h3>
 
-            <Input
-              id="username"
-              label="Username"
-              type="text"
-              placeholder="Enter new username"
-            >
-              <button className="text-zinc-900 font-bold bg-white p-2 rounded-xl hover:cursor-pointer hover:bg-green-600 hover:text-white duration-300 ease-in-out">
-                Save
-              </button>
-            </Input>
+            <form>
+              <Input
+                id="username"
+                label="Username"
+                type="text"
+                placeholder="Enter new username"
+              >
+                <button className="text-zinc-900 font-bold bg-white p-2 rounded-xl hover:cursor-pointer hover:bg-green-600 hover:text-white duration-300 ease-in-out">
+                  Save
+                </button>
+              </Input>
+            </form>
           </div>
 
           <hr className="opacity-20 my-6" />

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstance } from "@/services/apiClient";
+import api from "@/services/api";
 import { FieldValues } from "react-hook-form";
 
 interface User {
@@ -22,35 +22,35 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (data) => {
     set({ loading: true });
-    await axiosInstance.post("/auth/login", data, { withCredentials: true });
+    await api.post("/auth/login", data, { withCredentials: true });
     getUser(set);
-    
+
     set({ loading: false });
   },
 
   logout: async () => {
-    await axiosInstance.post("/auth/logout", {}, { withCredentials: true });
+    await api.post("/auth/logout", {}, { withCredentials: true });
     set({ user: null });
   },
 
   refresh: async () => {
-
     if (get().isRefreshed) return;
 
-    try {
-      const res = await axiosInstance.get("/auth/me", {
+    api
+      .get("/auth/me", {
         withCredentials: true,
+      })
+      .then((res) => {
+        set({ user: { username: res.data.username }, isRefreshed: true });
+      })
+      .catch(() => {
+        set({ user: null, isRefreshed: true });
       });
-
-      set({ user: { username: res.data.username}, isRefreshed: true });
-    } catch (err) {
-      set({ user: null, isRefreshed: true });
-    }
   },
 }));
 
 async function getUser(set: any) {
-  const res = await axiosInstance.get("/auth/me", { withCredentials: true });
+  const res = await api.get("/auth/me", { withCredentials: true });
 
   set({ user: { username: res.data.username } });
 }

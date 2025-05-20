@@ -7,11 +7,14 @@ import {
 } from "@tabler/icons-react";
 import Logo from "./Logo";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
+import { useAuthStore } from "@/context/useAuthStore";
 
 interface Props {
   children: React.ReactNode;
 }
 export function UserSidebar({ children }: Props) {
+  const logout = useAuthStore(s => s.logout);
+
   const links = [
     {
       label: "Dashboard",
@@ -30,7 +33,7 @@ export function UserSidebar({ children }: Props) {
     },
     {
       label: "Logout",
-      href: "/logout",
+      href: "#",
       icon: <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-200" />,
     },
   ];
@@ -49,8 +52,9 @@ export function UserSidebar({ children }: Props) {
             <Logo />
             <div className="mt-8 flex flex-col gap-2 ">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <SidebarLink key={idx} link={link} onClick={() => link.label === 'Logout' ? logout() : undefined } />
               ))}
+              
             </div>
           </div>
         </SidebarBody>
