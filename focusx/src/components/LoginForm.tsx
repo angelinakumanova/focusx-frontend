@@ -13,20 +13,28 @@ const inputStyle =
 const labelStyle = "text-white font-bold text-base";
 
 const LoginForm = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm();
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogin = (data: FieldValues) => {
-
+  const handleLogin = async (data: FieldValues) => {
     try {
-      login(data);
-      navigate('/home');
+      await login(data);
+      navigate("/home");
     } catch (err) {
-      reset();
+      reset({ username: "", password: "", keepErrors: true });
+      setError("invalid", {
+        type: "custom",
+        message: "Invalid username or password!",
+      });
     }
-
-  }
+  };
 
   return (
     <>
@@ -71,6 +79,10 @@ const LoginForm = () => {
               {...register("password")}
             />
           </div>
+
+          {typeof errors.invalid?.message === "string" && (
+            <p className="text-red-600">{errors.invalid.message}</p>
+          )}
 
           <button
             className="hover:cursor-pointer flex text-base items-center justify-center gap-2

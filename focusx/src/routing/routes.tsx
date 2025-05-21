@@ -16,12 +16,12 @@ const router = createBrowserRouter([
     children: [
       {
         element: <PublicRoute />,
-       children:[ 
-        { index: true, element: <LandingPage /> },
-        { path: "register", element: <SignUpForm /> },
-        { path: "login", element: <LoginForm /> },]
-    },
-
+        children: [
+          { index: true, element: <LandingPage /> },
+          { path: "register", element: <SignUpForm /> },
+          { path: "login", element: <LoginForm /> },
+        ],
+      },
 
       // Protected routes
       {

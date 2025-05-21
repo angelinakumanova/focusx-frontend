@@ -22,10 +22,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (data) => {
     set({ loading: true });
-    await api.post("/auth/login", data, { withCredentials: true });
-    getUser(set);
 
-    set({ loading: false });
+    try {
+      await api.post("/auth/login", data, { withCredentials: true });
+      await getUser(set);
+    } finally {
+      set({ loading: false });
+    }
   },
 
   logout: async () => {
