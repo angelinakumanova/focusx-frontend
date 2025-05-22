@@ -12,15 +12,20 @@ const inputStyle =
   "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
 const labelStyle = "text-white font-bold text-base";
 
+type LoginFormInput = {
+  username: string;
+  password: string;
+}
+
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     setError,
     formState: { errors },
-  } = useForm();
-  const { login } = useAuthStore();
+  } = useForm<LoginFormInput>();
+
+  const { login, error } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogin = async (data: FieldValues) => {
@@ -28,11 +33,7 @@ const LoginForm = () => {
       await login(data);
       navigate("/home");
     } catch (err) {
-      reset({ username: "", password: "", keepErrors: true });
-      setError("invalid", {
-        type: "custom",
-        message: "Invalid username or password!",
-      });
+      setError('password', { type: 'manual', message: 'Invalid credentials' });
     }
   };
 
@@ -80,9 +81,7 @@ const LoginForm = () => {
             />
           </div>
 
-          {typeof errors.invalid?.message === "string" && (
-            <p className="text-red-600">{errors.invalid.message}</p>
-          )}
+          {error && <p className="text-red-600 -mt-2 mb-1">{error}</p>}
 
           <button
             className="hover:cursor-pointer flex text-base items-center justify-center gap-2

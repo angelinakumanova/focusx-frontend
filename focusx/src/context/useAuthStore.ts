@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import api from "@/services/api";
 import { FieldValues } from "react-hook-form";
+import { AxiosError } from "axios";
+import ErrorResponse from "@/interfaces/ErrorResponse";
+
 
 interface User {
   username: string;
@@ -10,6 +13,7 @@ interface AuthState {
   user: User | null;
   isRefreshed: boolean;
   loading: boolean;
+  error: string;
   login: (data: FieldValues) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -19,13 +23,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isRefreshed: false,
   loading: false,
+  error: "",
 
   login: async (data) => {
     set({ loading: true });
 
     try {
       await api.post("/auth/login", data, { withCredentials: true });
-      await getUser(set);
+      getUser(set);
+      set({ error: '' })
+    } catch (err) {
+      const error = (err as AxiosError).response?.data as ErrorResponse;
+      set({error: error.message})
     } finally {
       set({ loading: false });
     }
@@ -37,6 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   refresh: async () => {
+    
     if (get().isRefreshed) return;
 
     api
