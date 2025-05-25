@@ -5,8 +5,7 @@ import StatisticsGrid from "./StatisticsGrid";
 import { useAuthStore } from "@/context/useAuthStore";
 
 export default function Dashboard() {
-  const { user } = useAuthStore();
-  
+  const user = useAuthStore((s) => s.user);
 
   return (
     <div className="bg-neutral-950 text-gray-100 min-h-screen w-full px-6 py-10 sm:px-10 overflow-y-auto">

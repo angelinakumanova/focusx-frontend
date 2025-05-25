@@ -11,9 +11,6 @@ import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
 
-const inputStyle = "text-white bg-zinc-700 ";
-const labelStyle = "text-white font-bold text-base";
-
 export default function SignUpForm() {
   const schema = z
     .object({
@@ -72,29 +69,28 @@ export default function SignUpForm() {
           })}
         >
           <div className="mb-4">
-            <Label htmlFor="username" className={labelStyle}>
+            <Label htmlFor="username" >
               Username
             </Label>
             <Input
               id="username"
               placeholder="johnDoe"
               type="text"
-              className={inputStyle}
               {...register("username")}
             />
             {errors.username && (
               <p className="text-red-600">{errors.username.message}</p>
             )}
           </div>
+          
           <div className="mb-4">
-            <Label htmlFor="email" className={labelStyle}>
+            <Label htmlFor="email" >
               Email Address
             </Label>
             <Input
               id="email"
               placeholder="john.doe@example.com"
               type="email"
-              className={inputStyle}
               {...register("email")}
             />
 
@@ -104,14 +100,13 @@ export default function SignUpForm() {
           </div>
 
           <div className="mb-4">
-            <Label htmlFor="password" className={labelStyle}>
+            <Label htmlFor="password" >
               Password
             </Label>
             <Input
               id="password"
               placeholder="••••••••"
               type="password"
-              className={inputStyle}
               {...register("password")}
             />
             {errors.password && (
@@ -120,14 +115,13 @@ export default function SignUpForm() {
           </div>
 
           <div className="mb-8">
-            <Label htmlFor="confirmPassword" className={labelStyle}>
+            <Label htmlFor="confirmPassword" >
               Confirm password
             </Label>
             <Input
               id="confirmPassword"
               placeholder="••••••••"
               type="password"
-              className={inputStyle}
               {...register("confirmPassword")}
             />
             {errors.confirmPassword && (

@@ -20,9 +20,7 @@ type LoginFormInput = {
 const LoginForm = () => {
   const {
     register,
-    handleSubmit,
-    setError,
-    formState: { errors },
+    handleSubmit
   } = useForm<LoginFormInput>();
 
   const { login, error } = useAuthStore();
@@ -33,7 +31,6 @@ const LoginForm = () => {
       await login(data);
       navigate("/home");
     } catch (err) {
-      setError('password', { type: 'manual', message: 'Invalid credentials' });
     }
   };
 

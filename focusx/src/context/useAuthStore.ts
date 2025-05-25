@@ -4,8 +4,8 @@ import { FieldValues } from "react-hook-form";
 import { AxiosError } from "axios";
 import ErrorResponse from "@/interfaces/ErrorResponse";
 
-
 interface User {
+  id: string;
   username: string;
 }
 
@@ -17,6 +17,7 @@ interface AuthState {
   login: (data: FieldValues) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
+  getUser: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -30,11 +31,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       await api.post("/auth/login", data, { withCredentials: true });
-      getUser(set);
-      set({ error: '' })
+      set({ error: "" });
     } catch (err) {
       const error = (err as AxiosError).response?.data as ErrorResponse;
-      set({error: error.message})
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
@@ -46,7 +46,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   refresh: async () => {
-    
     if (get().isRefreshed) return;
 
     api
@@ -54,16 +53,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         withCredentials: true,
       })
       .then((res) => {
-        set({ user: { username: res.data.username }, isRefreshed: true });
+        set({
+          user: { id: res.data.id, username: res.data.username },
+          isRefreshed: true,
+        });
       })
       .catch(() => {
         set({ user: null, isRefreshed: true });
       });
   },
+
+  getUser: async () => {
+    const res = await api.get("/auth/me", { withCredentials: true });
+
+    set({ user: { id: res.data.id, username: res.data.username } });
+  },
 }));
-
-async function getUser(set: any) {
-  const res = await api.get("/auth/me", { withCredentials: true });
-
-  set({ user: { username: res.data.username } });
-}
