@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
+import ErrorResponse from "@/interfaces/ErrorResponse";
 
 export default function SignUpForm() {
   const schema = z
@@ -33,6 +34,7 @@ export default function SignUpForm() {
     handleSubmit,
     reset,
     formState: { errors },
+    setError,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -65,13 +67,32 @@ export default function SignUpForm() {
                 reset();
                 navigate("/login");
               })
-              .catch((error) => console.log(error));
+              .catch((error) => {
+                const errorResponse = error.response.data as ErrorResponse;
+                const fieldErrors = errorResponse.fieldErrors;
+
+                if (fieldErrors) {
+                  for (let err of fieldErrors) {
+                    const validFields = [
+                      "username",
+                      "email",
+                      "password",
+                      "confirmPassword",
+                    ] as const;
+                    type FormField = (typeof validFields)[number];
+
+                    if (validFields.includes(err.field as FormField)) {
+                      setError(err.field as FormField, {
+                        message: err.message,
+                      });
+                    }
+                  }
+                }
+              });
           })}
         >
           <div className="mb-4">
-            <Label htmlFor="username" >
-              Username
-            </Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               placeholder="johnDoe"
@@ -82,11 +103,9 @@ export default function SignUpForm() {
               <p className="text-red-600">{errors.username.message}</p>
             )}
           </div>
-          
+
           <div className="mb-4">
-            <Label htmlFor="email" >
-              Email Address
-            </Label>
+            <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               placeholder="john.doe@example.com"
@@ -100,9 +119,7 @@ export default function SignUpForm() {
           </div>
 
           <div className="mb-4">
-            <Label htmlFor="password" >
-              Password
-            </Label>
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               placeholder="••••••••"
@@ -115,9 +132,7 @@ export default function SignUpForm() {
           </div>
 
           <div className="mb-8">
-            <Label htmlFor="confirmPassword" >
-              Confirm password
-            </Label>
+            <Label htmlFor="confirmPassword">Confirm password</Label>
             <Input
               id="confirmPassword"
               placeholder="••••••••"
