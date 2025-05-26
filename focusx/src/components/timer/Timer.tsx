@@ -1,6 +1,6 @@
 import { useFocusTimer } from "@/hooks/useFocusTimer";
 import { AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopUpModal from "../PopUpModal";
 import CompletedModal from "./CompletedModal";
 import TimeSelect from "./TimeSelect";
@@ -25,6 +25,21 @@ const FocusTimer = () => {
     isCompleted,
     setIsCompleted,
   } = useFocusTimer({ minutes, breakMinutes, sets });
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // Required for Chrome
+    };
+
+    if (isRunning) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isRunning]);
 
   return (
     <div className="w-full h-screen bg-neutral-950 flex flex-col items-center justify-center text-center text-white px-4">
@@ -78,12 +93,7 @@ const FocusTimer = () => {
               value={breakMinutes}
               onChange={setBreakMinutes}
             />
-            <TimeSelect
-              max={20}              
-              label="Sets"
-              value={sets}
-              onChange={setSets}
-            />
+            <TimeSelect max={20} label="Sets" value={sets} onChange={setSets} />
           </div>
           <button
             onClick={startTimer}

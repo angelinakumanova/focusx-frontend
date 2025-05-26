@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       await api.post("/auth/login", data, { withCredentials: true });
+      get().getUser(); 
       set({ error: "" });
     } catch (err) {
       const error = (err as AxiosError).response?.data as ErrorResponse;

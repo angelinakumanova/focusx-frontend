@@ -10,7 +10,6 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Check 401 and also that we are NOT already retrying
     if (error.response?.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
 
