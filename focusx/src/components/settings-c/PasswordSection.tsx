@@ -7,19 +7,18 @@ import { useState } from "react";
 import { useAuthStore } from "@/context/useAuthStore";
 import ErrorResponse from "@/interfaces/ErrorResponse";
 import { Label } from "../ui/auth-label";
+import { passwordSchema } from "../SignUpForm";
 
 const PasswordSection = () => {
   const user = useAuthStore((s) => s.user);
   const [successMessage, setSucessMessage] = useState<string | null>(null);
 
-  const passwordSchema = z
+  const schema = z
     .object({
       currentPassword: z
         .string()
         .min(1, { message: "Please enter your current password" }),
-      newPassword: z
-        .string()
-        .min(1, { message: "Please enter valid new password" }),
+      newPassword: passwordSchema,
       confirmPassword: z.string(),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
@@ -27,7 +26,7 @@ const PasswordSection = () => {
       message: "Passwords do not match",
     });
 
-  type PasswordFormData = z.infer<typeof passwordSchema>;
+  type PasswordFormData = z.infer<typeof schema>;
 
   const {
     register,
@@ -36,18 +35,17 @@ const PasswordSection = () => {
     reset,
     formState: { errors },
   } = useForm<PasswordFormData>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolver(schema),
   });
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Change Password</h3>
+    <div>
+      <h3 className="text-lg font-semibold mb-10">Change Password</h3>
 
-      <form
-        className="space-y-4"
+      <form className="space-y-4"
         onSubmit={handleSubmit((data) => {
           api
-            .put(`/users/${user?.id}`, data, {
+            .put(`/users/${user?.id}/password`, data, {
               withCredentials: true,
             })
             .then(() => {
@@ -65,39 +63,44 @@ const PasswordSection = () => {
             });
         })}
       >
-        <Label>Current Password</Label>
-        <Input
-          id="old-password"
-          type="password"
-          placeholder="Enter current password"
-          {...register("currentPassword")}
-        />
-        {errors.currentPassword && (
-          <p className="text-red-600">{errors.currentPassword.message}</p>
-        )}
+        <div>
+          <Label>Current Password</Label>
+          <Input
+            id="old-password"
+            type="password"
+            placeholder="Enter current password"
+            {...register("currentPassword")}
+          />
+          {errors.currentPassword && (
+            <p className="text-red-600">{errors.currentPassword.message}</p>
+          )}
+        </div>
 
-        <Label>New Password</Label>
-        <Input
-          id="new-password"
-          type="password"
-          placeholder="Enter new password"
-          {...register("newPassword")}
-        />
-        {errors.newPassword && (
-          <p className="text-red-600">{errors.newPassword.message}</p>
-        )}
+        <div>
+          <Label>New Password</Label>
+          <Input
+            id="new-password"
+            type="password"
+            placeholder="Enter new password"
+            {...register("newPassword")}
+          />
+          {errors.newPassword && (
+            <p className="text-red-600">{errors.newPassword.message}</p>
+          )}
+        </div>
 
-
-        <Label>Confirm Password</Label>
-        <Input
-          id="confirm-password"
-          type="password"
-          placeholder="Confirm new password"
-          {...register("confirmPassword")}
-        />
-        {errors.confirmPassword && !errors.newPassword && (
-          <p className="text-red-600">{errors.confirmPassword.message}</p>
-        )}
+        <div>
+          <Label>Confirm Password</Label>
+          <Input
+            id="confirm-password"
+            type="password"
+            placeholder="Confirm new password"
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword && !errors.newPassword && (
+            <p className="text-red-600">{errors.confirmPassword.message}</p>
+          )}
+        </div>
 
         <div className="flex justify-end items-center gap-2">
           {errors.root && <p className="text-red-600">{errors.root.message}</p>}

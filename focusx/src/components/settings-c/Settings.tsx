@@ -4,19 +4,19 @@ import { CheckboxToggle } from "../CheckboxToggle";
 import PopUpModal from "../PopUpModal";
 import UsernameSection from "./UsernameSection";
 import PasswordSection from "./PasswordSection";
+import api from "@/services/api";
+import { useAuthStore } from "@/context/useAuthStore";
 
 const Settings = () => {
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const [isModalOpen, setModalVisibility] = useState(false);
-
-  
 
   return (
     <div className="bg-neutral-950 p-4 md:p-10 overflow-y-auto lg:min-w-5xl mx-auto text-neutral-200  space-y-12 ">
       <div>
         <h1 className="text-4xl font-bold mb-2">Settings</h1>
-        <p className="text-neutral-400">
-          Manage your preferences and account.
-        </p>
+        <p className="text-neutral-400">Manage your preferences and account.</p>
       </div>
 
       <section>
@@ -44,7 +44,6 @@ const Settings = () => {
           <hr className="opacity-20 my-6" />
 
           <PasswordSection />
-
         </div>
       </section>
 
@@ -70,7 +69,12 @@ const Settings = () => {
               title="Are you sure you want to delete your account?"
               confirmText="Delete"
               toggleVisibility={() => setModalVisibility(false)}
-              confirmFn={() => console.log("It's deleted.")}
+              confirmFn={() => {
+                api
+                  .put(`/users/${user?.id}/deactivate`)
+                  .then(() => logout())
+                  .catch(() => console.log("working"));
+              }}
             />
           )}
         </AnimatePresence>

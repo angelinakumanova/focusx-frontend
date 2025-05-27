@@ -7,23 +7,22 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
-
-const inputStyle =
-  "text-white bg-zinc-700 placeholder:text-white placeholder:opacity-90";
-const labelStyle = "text-white font-bold text-base";
+import axios from "axios";
 
 type LoginFormInput = {
   username: string;
   password: string;
-}
+};
 
 const LoginForm = () => {
   const {
     register,
-    handleSubmit
+    handleSubmit,
+    setError,
+    formState: { errors },
   } = useForm<LoginFormInput>();
 
-  const { login, error } = useAuthStore();
+  const { login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogin = async (data: FieldValues) => {
@@ -31,6 +30,9 @@ const LoginForm = () => {
       await login(data);
       navigate("/home");
     } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError("password", { message: err.response?.data.message });
+      }
     }
   };
 
@@ -55,30 +57,18 @@ const LoginForm = () => {
           onSubmit={handleSubmit((data) => handleLogin(data))}
         >
           <div className="mb-4">
-            <Label htmlFor="username" className={labelStyle}>
-              Username
-            </Label>
-            <Input
-              id="username"
-              type="text"
-              className={inputStyle}
-              {...register("username")}
-            />
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" type="text" {...register("username")} />
           </div>
 
           <div className="mb-4">
-            <Label htmlFor="password" className={labelStyle}>
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              className={inputStyle}
-              {...register("password")}
-            />
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" {...register("password")} />
           </div>
 
-          {error && <p className="text-red-600 -mt-2 mb-1">{error}</p>}
+          {errors.password && (
+            <p className="text-red-600 -mt-2 mb-1">{errors.password.message}</p>
+          )}
 
           <button
             className="hover:cursor-pointer flex text-base items-center justify-center gap-2

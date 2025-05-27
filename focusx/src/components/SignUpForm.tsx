@@ -12,8 +12,7 @@ import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
 import ErrorResponse from "@/interfaces/ErrorResponse";
 
-export default function SignUpForm() {
-  const passwordSchema = z
+export const passwordSchema = z
     .string()
     .min(12, {message: 'Password should be longer'})
     .max(64, {message: 'Password is too long'})
@@ -29,6 +28,8 @@ export default function SignUpForm() {
     .refine((pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), {
       message: "Include at least 1 special character (!@#...)",
     });
+
+export default function SignUpForm() {
 
   const schema = z
     .object({
