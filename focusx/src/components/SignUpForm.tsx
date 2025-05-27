@@ -13,17 +13,37 @@ import Logo from "./Logo";
 import ErrorResponse from "@/interfaces/ErrorResponse";
 
 export default function SignUpForm() {
+  const passwordSchema = z
+    .string()
+    .min(12, {message: 'Password should be longer'})
+    .max(64, {message: 'Password is too long'})
+    .refine((pwd) => /[A-Z]/.test(pwd), {
+      message: "Include at least 1 uppercase letter (A-Z)",
+    })
+    .refine((pwd) => /[a-z]/.test(pwd), {
+      message: "Include at least 1 lowercase letter (a-z)",
+    })
+    .refine((pwd) => /[0-9]/.test(pwd), {
+      message: "Include at least 1 number (0-9)",
+    })
+    .refine((pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), {
+      message: "Include at least 1 special character (!@#...)",
+    });
+
   const schema = z
     .object({
       username: z
-        .string({ message: "Please enter a username" })
-        .min(1, { message: "Please enter a username" }),
-      email: z.string().email({ message: "Invalid email" }),
-      password: z.string().min(6),
+        .string({ message: "Please enter a username." })
+        .max(20, { message: "Username must be 20 characters or less." })
+        .regex(new RegExp("^[a-zA-Z0-9]+$"), {
+          message: "Username must contain only letters & numbers.",
+        }),
+      email: z.string().email({ message: "Please enter a valid email" }),
+      password: passwordSchema,
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
+      message: "Passwords should match",
       path: ["confirmPassword"],
     });
 
