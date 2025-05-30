@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
 import axios from "axios";
+import Spinner from "./Spinner";
+import { useState } from "react";
 
 type LoginFormInput = {
   username: string;
@@ -15,6 +17,8 @@ type LoginFormInput = {
 };
 
 const LoginForm = () => {
+  const [isLoading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -26,12 +30,20 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (data: FieldValues) => {
+    setLoading(true);
     try {
       await login(data);
       navigate("/home");
     } catch (err) {
+      setLoading(false);
       if (axios.isAxiosError(err)) {
-        setError("password", { message: err.response?.data.message });
+        if ((err.code = "ERR_NETWORK")) {
+          setError("root", {
+            message: "An unexpected error occured. Try again.",
+          });
+          return;
+        }
+        setError("root", { message: err.response?.data.message });
       }
     }
   };
@@ -66,8 +78,8 @@ const LoginForm = () => {
             <Input id="password" type="password" {...register("password")} />
           </div>
 
-          {errors.password && (
-            <p className="text-red-600 -mt-2 mb-1">{errors.password.message}</p>
+          {errors.root && (
+            <p className="text-red-600 -mt-2 mb-1">{errors.root.message}</p>
           )}
 
           <button
@@ -79,6 +91,7 @@ const LoginForm = () => {
           >
             Log In
             <BottomGradient />
+            {isLoading && <Spinner width="w-4" />}
           </button>
 
           <div className="text-center opacity-80 mt-10">

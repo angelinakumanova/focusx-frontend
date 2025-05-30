@@ -23,7 +23,7 @@ const Settings = () => {
         <h2 className="text-2xl font-semibold mb-4">Notifications</h2>
         <div className="space-y-4 bg-neutral-800 rounded-2xl p-6">
           <CheckboxToggle
-            label="Email Reminders"
+            label="Email Updates"
             checked={true}
             onChange={(val) => val}
           />

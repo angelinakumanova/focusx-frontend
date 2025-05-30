@@ -3,33 +3,35 @@ import { Input } from "@/components/ui/auth-input";
 import { Label } from "@/components/ui/auth-label";
 import api from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconArrowRight } from "@tabler/icons-react";
+import axios from "axios";
 import { motion } from "motion/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
-import ErrorResponse from "@/interfaces/ErrorResponse";
+import Spinner from "./Spinner";
 
 export const passwordSchema = z
-    .string()
-    .min(12, {message: 'Password should be longer'})
-    .max(64, {message: 'Password is too long'})
-    .refine((pwd) => /[A-Z]/.test(pwd), {
-      message: "Include at least 1 uppercase letter (A-Z)",
-    })
-    .refine((pwd) => /[a-z]/.test(pwd), {
-      message: "Include at least 1 lowercase letter (a-z)",
-    })
-    .refine((pwd) => /[0-9]/.test(pwd), {
-      message: "Include at least 1 number (0-9)",
-    })
-    .refine((pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), {
-      message: "Include at least 1 special character (!@#...)",
-    });
+  .string()
+  .min(12, { message: "Password should be longer" })
+  .max(64, { message: "Password is too long" })
+  .refine((pwd) => /[A-Z]/.test(pwd), {
+    message: "Include at least 1 uppercase letter (A-Z)",
+  })
+  .refine((pwd) => /[a-z]/.test(pwd), {
+    message: "Include at least 1 lowercase letter (a-z)",
+  })
+  .refine((pwd) => /[0-9]/.test(pwd), {
+    message: "Include at least 1 number (0-9)",
+  })
+  .refine((pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), {
+    message: "Include at least 1 special character (!@#...)",
+  });
 
 export default function SignUpForm() {
+  const [isLoading, setLoading] = useState(false);
 
   const schema = z
     .object({
@@ -81,16 +83,25 @@ export default function SignUpForm() {
         <form
           className="mx-auto w-full max-w-md drop-shadow-2xl drop-shadow-chart-3
           my-8 bg-zinc-900 rounded-none p-4 md:rounded-2xl md:p-8"
-          onSubmit={handleSubmit((data) => {
-            api
-              .post("/auth/register", data)
-              .then(() => {
-                reset();
-                navigate("/login");
-              })
-              .catch((error) => {
-                const errorResponse = error.response.data as ErrorResponse;
-                const fieldErrors = errorResponse.fieldErrors;
+          onSubmit={handleSubmit(async (data) => {
+            setLoading(true);
+
+            try {
+              await api.post("/auth/register", data);
+              reset();
+              navigate("/login");
+            } catch (error) {
+              setLoading(false);
+
+              if (axios.isAxiosError(error)) {
+                if ((error.code = "ERR_NETWORK")) {
+                  setError("root", {
+                    message: "An unexpected error occured. Try again.",
+                  });
+                  return;
+                }
+
+                const fieldErrors = error.response?.data.fieldErrors;
 
                 if (fieldErrors) {
                   for (let err of fieldErrors) {
@@ -109,7 +120,8 @@ export default function SignUpForm() {
                     }
                   }
                 }
-              });
+              }
+            }
           })}
         >
           <div className="mb-4">
@@ -165,6 +177,10 @@ export default function SignUpForm() {
             )}
           </div>
 
+          {errors.root && (
+            <p className="text-red-600 -mt-2 mb-1">{errors.root.message}</p>
+          )}
+
           <button
             className="hover:cursor-pointer flex text-base items-center justify-center gap-2
           font-bold group/btn relative border border-gray-600 drop-shadow-md
@@ -172,8 +188,9 @@ export default function SignUpForm() {
           shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] "
             type="submit"
           >
-            Sign up <IconArrowRight height={"20px"} />
+            Sign up
             <BottomGradient />
+            {isLoading && <Spinner width="w-4" />}
           </button>
 
           <div className="text-center opacity-80 mt-10">
