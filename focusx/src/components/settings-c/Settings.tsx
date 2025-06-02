@@ -4,7 +4,7 @@ import { CheckboxToggle } from "../CheckboxToggle";
 import PopUpModal from "../PopUpModal";
 import UsernameSection from "./UsernameSection";
 import PasswordSection from "./PasswordSection";
-import api from "@/services/api";
+import userApi from "@/services/userApi";
 import { useAuthStore } from "@/context/useAuthStore";
 
 const Settings = () => {
@@ -70,7 +70,7 @@ const Settings = () => {
               confirmText="Delete"
               toggleVisibility={() => setModalVisibility(false)}
               confirmFn={() => {
-                api
+                userApi
                   .put(`/users/${user?.id}/deactivate`)
                   .then(() => logout())
                   .catch(() => console.log("working"));

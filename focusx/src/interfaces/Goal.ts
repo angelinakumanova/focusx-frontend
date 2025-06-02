@@ -1,7 +1,12 @@
-export const typeEnums = ["Session", "Streak"] as const;
+export const typeEnums = ["SESSION", "STREAK"] as const;
 
 export default interface Goal {
-    title: string;
-    type: (typeof typeEnums[number]);
-    reward: string;
+  id: string;
+  name: string;
+  type: (typeof typeEnums)[number];
+  sets: number;
+  duration: number;
+  days: number;
+  progress: number;
+  reward: string;
 }

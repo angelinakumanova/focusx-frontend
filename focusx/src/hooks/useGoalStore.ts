@@ -1,36 +1,39 @@
 import Goal from "@/interfaces/Goal";
+import goalApi from "@/services/goalApi";
 import { create } from "zustand";
 
 type GoalStore = {
   goals: Goal[];
   activeGoal: Goal | null;
-  addGoal: (goal: Goal) => void;
+  addGoal: (goal: Goal, userId: string) => void;
   removeGoal: (goal: Goal) => void;
   setActiveGoal: (goal: Goal | null) => void;
+  setGoals: (goals: Goal[]) => void;
 };
 
 export const useGoalStore = create<GoalStore>((set) => ({
-  goals: [
-    {
-      title: "Learn Italian",
-      type: "Session",
-      reward: "Ice Cream",
-      sets: 5,
-      minutesPerSet: 60,
-      completedMinutes: 320,
-    },
-    {
-      title: "Test",
-      type: "Session",
-      reward: "Chocolate",
-      sets: 5,
-      minutesPerSet: 50,
-      completedMinutes: 250,
-    },
-  ],
+  goals: [],
   activeGoal: null,
-  addGoal: (goal) => set((state) => ({ goals: [...state.goals, goal] })),
-  removeGoal: (goal) =>
-    set((state) => ({ goals: state.goals.filter((g) => g !== goal) })),
+  addGoal: async (goal, userId) => {
+    await goalApi
+      .post(`/${userId}`, goal)
+      .then(() => set((state) => ({ goals: [...state.goals, goal] })));
+  },
+  removeGoal: async (goal) => {
+    await goalApi
+      .delete(`/${goal.id}`)
+      .then(() =>
+        set((state) => ({ goals: state.goals.filter((g) => g !== goal) }))
+      );
+  },
   setActiveGoal: (goal) => set({ activeGoal: goal }),
+  setGoals: (goals) => set({ goals }),
 }));
+
+export async function fetchGoals(userId: string) {
+  goalApi.get<Goal[]>(`/${userId}`).then((res) => {
+    console.log(res.data);
+
+    useGoalStore.setState({ goals: res.data });
+  });
+}

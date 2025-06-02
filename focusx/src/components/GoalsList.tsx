@@ -1,10 +1,18 @@
 import { AnimatePresence } from "motion/react";
 import GoalListItem from "./GoalsListItem";
-import { useGoalStore } from "@/hooks/useGoalStore";
+import { useAuthStore } from "@/context/useAuthStore";
+import { fetchGoals, useGoalStore } from "@/hooks/useGoalStore";
+import { useEffect } from "react";
 
-// TODO: CHANGE TO GOAL ID
 const GoalsList = () => {
+  const user = useAuthStore((s) => s.user);
   const goals = useGoalStore((s) => s.goals);
+ 
+  useEffect(() => {
+    if (user?.id) {
+      fetchGoals(user.id);
+    }
+  }, [])
 
   return (
     <div className="space-y-8">

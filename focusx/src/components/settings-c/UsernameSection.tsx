@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/context/useAuthStore";
-import api from "@/services/api";
+import userApi from "@/services/userApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,7 +34,7 @@ const UsernameSection = () => {
 
       <form
         onSubmit={handleSubmit((data) => {
-          api
+          userApi
             .put(`/users/${user?.id}/${data.username}`, {
               withCredentials: true,
             })

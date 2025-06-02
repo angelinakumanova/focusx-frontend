@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/auth-input";
 import { Label } from "@/components/ui/auth-label";
-import api from "@/services/api";
+import userApi from "@/services/userApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { motion } from "motion/react";
@@ -87,7 +87,7 @@ export default function SignUpForm() {
             setLoading(true);
 
             try {
-              await api.post("/auth/register", data);
+              await userApi.post("/auth/register", data);
               reset();
               navigate("/login");
             } catch (error) {

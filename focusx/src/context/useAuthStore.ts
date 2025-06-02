@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import api from "@/services/api";
+import userApi from "@/services/userApi";
 import { FieldValues } from "react-hook-form";
 
 interface User {
@@ -26,7 +26,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ loading: true });
 
     try {
-      await api.post("/auth/login", data, { withCredentials: true });
+      await userApi.post("/auth/login", data, { withCredentials: true });
       get().getUser();
     } finally {
       set({ loading: false });
@@ -34,14 +34,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    await api.post("/auth/logout", {}, { withCredentials: true });
+    await userApi.post("/auth/logout", {}, { withCredentials: true });
     set({ user: null });
   },
 
   refresh: async () => {
     if (get().isRefreshed) return;
 
-    api
+    userApi
       .get("/auth/me", {
         withCredentials: true,
       })
@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   getUser: async () => {
-    const res = await api.get("/auth/me", { withCredentials: true });
+    const res = await userApi.get("/auth/me", { withCredentials: true });
 
     set({ user: { id: res.data.id, username: res.data.username } });
   },

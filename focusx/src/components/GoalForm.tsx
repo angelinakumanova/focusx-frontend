@@ -1,19 +1,20 @@
+import { useAuthStore } from "@/context/useAuthStore";
 import { useGoalStore } from "@/hooks/useGoalStore";
-import { typeEnums } from "@/interfaces/Goal";
-import SessionGoal from "@/interfaces/SessionGoal";
-import StreakGoal from "@/interfaces/StreakGoal";
+import Goal, { typeEnums } from "@/interfaces/Goal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const GoalForm = () => {
+  const user = useAuthStore((s) => s.user);
+
   const addGoal = useGoalStore((s) => s.addGoal);
   const goalsLength = useGoalStore((s) => s.goals).length;
 
   const goalSchema = z
     .object({
-      title: z
+      name: z
         .string({ message: "Please enter a title." })
         .min(1, { message: "Please enter a title." }),
       type: z.enum(typeEnums),
@@ -23,13 +24,13 @@ const GoalForm = () => {
             "Please enter how many sessions you plan to complete.",
         })
         .optional(),
-      minutesPerSet: z
+      duration: z
         .number({
           invalid_type_error:
             "Please specify how long each session should be (in minutes).",
         })
         .optional(),
-      streakDays: z
+      days: z
         .number({
           invalid_type_error:
             "Please enter how many days the streak should be.",
@@ -40,28 +41,28 @@ const GoalForm = () => {
         .min(1, { message: "Let us know what reward you’ll give yourself!" }),
     })
     .superRefine((data, ctx) => {
-      if (data.type === "Session") {
+      if (data.type === "SESSION") {
         if (data.sets == null) {
           ctx.addIssue({
-            path: ["numberOfSessions"],
+            path: ["sets"],
             code: z.ZodIssueCode.custom,
-            message: "numberOfSets is required for Session goals",
+            message: "Sets is required for Session goals",
           });
         }
 
-        if (data.minutesPerSet == null) {
+        if (data.duration == null) {
           ctx.addIssue({
-            path: ["sessionDuration"],
+            path: ["duration"],
             code: z.ZodIssueCode.custom,
-            message: "sessionDuration is required for Session goals",
+            message: "duration is required for Session goals",
           });
         }
       }
 
-      if (data.type === "Streak") {
-        if (data.streakDays == null) {
+      if (data.type === "STREAK") {
+        if (data.days == null) {
           ctx.addIssue({
-            path: ["streakDays"],
+            path: ["days"],
             code: z.ZodIssueCode.custom,
             message: "streakDays is required for Streak goals",
           });
@@ -77,10 +78,11 @@ const GoalForm = () => {
     watch,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<GoalData>({
     resolver: zodResolver(goalSchema),
-    defaultValues: { type: "Session" },
+    defaultValues: { type: "SESSION" },
   });
 
   const selectedType = watch("type");
@@ -98,20 +100,17 @@ const GoalForm = () => {
       </h2>
 
       <form
-        onSubmit={handleSubmit((data) => {
-
-          if (data.type === "Session") {
-            data = {
-              ...data,
-              completedSets: 0,
-              completedMinutes: 0,
-            } as SessionGoal;
-          } else if (data.type === "Streak") {
-            data = data as StreakGoal;
+        onSubmit={handleSubmit(async (data) => {
+          if (user) {
+            try {
+              await addGoal(data as Goal, user.id);
+              reset();
+            } catch (err) {
+              setError("root", {
+                message: "There was an error with adding a new goal. Please try again!",
+              });
+            }
           }
-
-          addGoal(data);
-          reset();
         })}
         className="grid gap-5"
       >
@@ -127,12 +126,10 @@ const GoalForm = () => {
             id="title"
             type="text"
             placeholder="e.g., Learn Italian"
-            {...register("title")}
+            {...register("name")}
             className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
           />
-          {errors.title && (
-            <p className="text-red-600">{errors.title.message}</p>
-          )}
+          {errors.name && <p className="text-red-600">{errors.name.message}</p>}
         </div>
 
         {/* Goal Type Selector */}
@@ -148,7 +145,7 @@ const GoalForm = () => {
                 onClick={() => handleTypeChange(type)}
                 className={`hover:cursor-pointer  px-4 py-1 rounded-full text-sm transition-colors ${
                   selectedType === type
-                    ? "bg-green-600 text-white "
+                    ? "bg-green-600 text-white font-bold"
                     : "bg-neutral-700 text-gray-300 hover:bg-neutral-600"
                 }`}
               >
@@ -163,7 +160,7 @@ const GoalForm = () => {
         </div>
 
         {/* Conditional Inputs */}
-        {selectedType === "Session" && (
+        {selectedType === "SESSION" && (
           <>
             <div>
               <label className="text-sm font-medium text-white mb-1 block">
@@ -187,18 +184,18 @@ const GoalForm = () => {
               <input
                 type="number"
                 placeholder="e.g., 60"
-                {...register("minutesPerSet", { valueAsNumber: true })}
+                {...register("duration", { valueAsNumber: true })}
                 className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
               />
 
-              {errors.minutesPerSet && (
-                <p className="text-red-600">{errors.minutesPerSet.message}</p>
+              {errors.duration && (
+                <p className="text-red-600">{errors.duration.message}</p>
               )}
             </div>
           </>
         )}
 
-        {selectedType === "Streak" && (
+        {selectedType === "STREAK" && (
           <div>
             <label className="text-sm font-medium text-white mb-1 block">
               Days in a Row
@@ -206,12 +203,12 @@ const GoalForm = () => {
             <input
               type="number"
               placeholder="e.g., 7"
-              {...register("streakDays", { valueAsNumber: true })}
+              {...register("days", { valueAsNumber: true })}
               className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
             />
 
-            {errors.streakDays && (
-              <p className="text-red-600">{errors.streakDays.message}</p>
+            {errors.days && (
+              <p className="text-red-600">{errors.days.message}</p>
             )}
           </div>
         )}
@@ -250,6 +247,7 @@ const GoalForm = () => {
             </>
           )}
         </button>
+        {errors.root && <p className="text-red-600">{errors.root.message}</p>}
       </form>
     </div>
   );

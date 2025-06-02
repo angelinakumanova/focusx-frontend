@@ -1,25 +1,23 @@
 import { useGoalStore } from "@/hooks/useGoalStore";
 import Goal from "@/interfaces/Goal";
-import SessionGoal from "@/interfaces/SessionGoal";
-import StreakGoal from "@/interfaces/StreakGoal";
 import { IconGift, IconX } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import PopUpModal from "./PopUpModal";
-import { AnimatePresence, motion } from "motion/react";
 
 interface Props {
   goal: Goal;
 }
 
 const GoalsListItem = ({ goal }: Props) => {
+  const [error, setError] = useState('');
   const { activeGoal, setActiveGoal, removeGoal } = useGoalStore();
   const [isModalOpen, setModalVisibility] = useState(false);
 
-  // TODO: Change to goal id
   return (
     <motion.div
       layout
-      key={goal.title}
+      key={goal.id}
       initial={{ opacity: 0 }}
       exit={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -49,9 +47,9 @@ const GoalsListItem = ({ goal }: Props) => {
       </div>
 
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-lg font-semibold text-white">{goal.title}</h3>
+        <h3 className="text-lg font-semibold text-white">{goal.name}</h3>
 
-        <div className="bg-neutral-800 text-xs text-white px-2 py-1 rounded-full">
+        <div className="bg-neutral-800 text-xs font-bold text-white px-2 py-1 rounded-full">
           {goal.type}
         </div>
       </div>
@@ -80,10 +78,14 @@ const GoalsListItem = ({ goal }: Props) => {
       <AnimatePresence mode="wait">
         {isModalOpen && (
           <PopUpModal
-            title={`Are you sure you want to delete "${goal.title}"`}
+            title={`Are you sure you want to delete "${goal.name}"`}
             confirmText="Delete"
-            confirmFn={() => {
-              removeGoal(goal);
+            confirmFn={async () => {
+              try {
+                await removeGoal(goal);
+              } catch (err) {
+                setError('There was an error with deleting goal. Try again later!'); 
+              }
 
               if (activeGoal === goal) setActiveGoal(null);
             }}
@@ -97,27 +99,19 @@ const GoalsListItem = ({ goal }: Props) => {
 
 export default GoalsListItem;
 
-function isSessionGoal(goal: Goal): goal is SessionGoal {
-  return goal.type === "Session";
-}
-
-function isStreakGoal(goal: Goal): goal is StreakGoal {
-  return goal.type === "Streak";
-}
-
 const formatGoal = (goal: Goal) => {
-  if (isSessionGoal(goal)) {
-    const { sets, minutesPerSet } = goal;
-    const totalMinutes = sets * minutesPerSet;
+  if (goal.type === 'SESSION') {
+    const { sets, duration } = goal;
+    const totalMinutes = sets * duration;
     const totalFormatted = formatMinutesToHoursAndMinutes(totalMinutes);
 
-    return `${sets} Set${sets > 1 ? "s" : ""} of ${minutesPerSet} Minute${
-      minutesPerSet > 1 ? "s" : ""
+    return `${sets} Set${sets > 1 ? "s" : ""} of ${duration} Minute${
+      duration > 1 ? "s" : ""
     } or ${totalFormatted}`;
   }
 
-  if (isStreakGoal(goal)) {
-    return `${goal.streakDays} Streak Day${goal.streakDays > 1 ? "s" : ""}`;
+  if (goal.type === 'STREAK') {
+    return `${goal.days} Streak Day${goal.days > 1 ? "s" : ""}`;
   }
 
   return "";
@@ -134,13 +128,13 @@ const formatMinutesToHoursAndMinutes = (minutes: number): string => {
 const GoalSummary = (goal: Goal) => `Goal type: ${formatGoal(goal)}`;
 
 export function calculateProgress(goal: Goal) {
-  if (isSessionGoal(goal)) {
-    const completion =
-      (goal.completedMinutes / (goal.minutesPerSet * goal.sets)) * 100;
+  if (goal.type === 'SESSION') {
+    const completion = (goal.progress / (goal.duration * goal.sets)) * 100;
 
     return completion > 100 ? 100 : completion.toFixed(0);
-  } else if (isStreakGoal(goal)) {
-    const completion = (goal.streakDays / goal.completedStreakDays) * 100;
+  } else if (goal.type === 'STREAK') {
+
+    const completion = (goal.progress / goal.days ) * 100;
 
     return completion > 100 ? 100 : completion.toFixed(0);
   }

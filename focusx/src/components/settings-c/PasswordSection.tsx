@@ -2,7 +2,7 @@ import { Input } from "../ui/auth-input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import api from "@/services/api";
+import userApi from "@/services/userApi";
 import { useState } from "react";
 import { useAuthStore } from "@/context/useAuthStore";
 import ErrorResponse from "@/interfaces/ErrorResponse";
@@ -42,9 +42,10 @@ const PasswordSection = () => {
     <div>
       <h3 className="text-lg font-semibold mb-10">Change Password</h3>
 
-      <form className="space-y-4"
+      <form
+        className="space-y-4"
         onSubmit={handleSubmit((data) => {
-          api
+          userApi
             .put(`/users/${user?.id}/password`, data, {
               withCredentials: true,
             })

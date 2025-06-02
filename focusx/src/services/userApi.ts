@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const api = axios.create({
+const userApi = axios.create({
   baseURL: "http://localhost:8080/api",
   withCredentials: true,
 });
 
-api.interceptors.response.use(
+userApi.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -14,11 +14,11 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/auth/refresh", null, {
+        await userApi.post("/auth/refresh", null, {
           withCredentials: true,
         });
 
-        return api(originalRequest);
+        return userApi(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }
@@ -28,4 +28,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default userApi;
