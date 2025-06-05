@@ -27,7 +27,7 @@ const GoalsList = () => {
     };
 
     fetchData();
-  }, [goals]);
+  }, [user?.id]);
 
   return (
     <div className="space-y-8">

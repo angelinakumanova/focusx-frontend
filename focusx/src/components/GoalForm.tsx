@@ -104,7 +104,7 @@ const GoalForm = () => {
           if (user) {
             try {
               const goal = {...data, progress: 0 } as Goal;
-              await addGoal(goal, user.id);
+              addGoal(goal, user.id);
               reset();
             } catch (err) {
               setError("root", {

@@ -22,7 +22,7 @@ const StatisticsGrid = () => {
 
   const user = useAuthStore((s) => s.user);
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const [sessionDuration, setSessionDuration] = useState<number | null>(null);
+  const [sessionDuration, setSessionDuration] = useState<number>(0);
 
   useEffect(() => {
     const fetchSessionDuration = async () => {
@@ -34,9 +34,7 @@ const StatisticsGrid = () => {
             },
           });
           setSessionDuration(response.data);
-        } catch (err) {
-          
-        }
+        } catch (err) {}
       }
     };
 
@@ -46,7 +44,10 @@ const StatisticsGrid = () => {
   const lastSession = {
     title: "Focus Sessions Today",
     subtitle: "Total Duration (No Breaks Included)",
-    value: sessionDuration !== null ? formatMinutesToHoursAndMinutes(sessionDuration) : '--',
+    value:
+      sessionDuration !== 0
+        ? formatMinutesToHoursAndMinutes(sessionDuration)
+        : "--",
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,
   };
 

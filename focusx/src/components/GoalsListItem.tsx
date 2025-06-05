@@ -4,12 +4,14 @@ import { IconGift, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import PopUpModal from "./PopUpModal";
+import { useAuthStore } from "@/context/useAuthStore";
 
 interface Props {
   goal: Goal;
 }
 
 const GoalsListItem = ({ goal }: Props) => {
+  const user = useAuthStore(s => s.user);
   const [error, setError] = useState('');
   const { activeGoal, setActiveGoal, removeGoal } = useGoalStore();
   const [isModalOpen, setModalVisibility] = useState(false);
@@ -82,7 +84,10 @@ const GoalsListItem = ({ goal }: Props) => {
             confirmText="Delete"
             confirmFn={async () => {
               try {
-                await removeGoal(goal);
+                if (user) {
+                  await removeGoal(goal, user.id );
+
+                }
               } catch (err) {
                 setError('There was an error with deleting goal. Try again later!'); 
               }
