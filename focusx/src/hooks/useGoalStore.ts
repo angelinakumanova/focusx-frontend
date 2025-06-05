@@ -31,9 +31,7 @@ export const useGoalStore = create<GoalStore>((set) => ({
 }));
 
 export async function fetchGoals(userId: string) {
-  goalApi.get<Goal[]>(`/${userId}`).then((res) => {
-    console.log(res.data);
-
-    useGoalStore.setState({ goals: res.data });
-  });
+    return goalApi.get<Goal[]>(`/${userId}`).then((res) => {
+      useGoalStore.setState({ goals: res.data });
+    });
 }

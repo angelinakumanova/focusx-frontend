@@ -103,7 +103,8 @@ const GoalForm = () => {
         onSubmit={handleSubmit(async (data) => {
           if (user) {
             try {
-              await addGoal(data as Goal, user.id);
+              const goal = {...data, progress: 0 } as Goal;
+              await addGoal(goal, user.id);
               reset();
             } catch (err) {
               setError("root", {

@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/context/useAuthStore";
+import sessionApi from "@/services/sessionApi";
 import { useEffect, useRef, useState } from "react";
 
 export interface FocusTimerOptions {
@@ -6,6 +8,7 @@ export interface FocusTimerOptions {
   sets: number;
   onComplete?: () => void;
 }
+
 
 export const useFocusTimer = ({
   minutes,
@@ -20,7 +23,9 @@ export const useFocusTimer = ({
   const [currentSet, setCurrentSet] = useState(1);
   const [onBreak, setOnBreak] = useState(false);
 
-  const sessionAudioRef = useRef(new Audio("/src/assets/sounds/session-start-and-break-sound.mp3"));
+  const sessionAudioRef = useRef(
+    new Audio("/src/assets/sounds/session-start-and-break-sound.mp3")
+  );
 
   const playSound = () => {
     const audio = sessionAudioRef.current;
@@ -64,6 +69,7 @@ export const useFocusTimer = ({
     if (timeLeft === 0 && isRunning && !isPaused && !isCompleted) {
       if (!onBreak) {
         playSound();
+
         if (currentSet < sets) {
           setOnBreak(true);
           setTimeLeft(breakMinutes * 60);
@@ -72,13 +78,27 @@ export const useFocusTimer = ({
           setIsRunning(false);
           onComplete?.();
         }
+        sessionApi.post("", {
+          minutes,
+          userId: useAuthStore.getState().user?.id,
+        });
       } else {
         setCurrentSet((s) => s + 1);
         setOnBreak(false);
         setTimeLeft(minutes * 60);
       }
     }
-  }, [timeLeft, isRunning, isPaused, isCompleted, onBreak, currentSet, sets, minutes, breakMinutes]);
+  }, [
+    timeLeft,
+    isRunning,
+    isPaused,
+    isCompleted,
+    onBreak,
+    currentSet,
+    sets,
+    minutes,
+    breakMinutes,
+  ]);
 
   const formatTime = (sec: number): string => {
     const m = Math.floor(sec / 60);

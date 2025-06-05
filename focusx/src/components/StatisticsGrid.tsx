@@ -1,7 +1,12 @@
 import { useGoalStore } from "@/hooks/useGoalStore";
 import { IconCircleCheck, IconClock, IconFlame } from "@tabler/icons-react";
-import { JSX } from "react";
-import { calculateProgress } from "./GoalsListItem";
+import { JSX, useEffect, useState } from "react";
+import {
+  calculateProgress,
+  formatMinutesToHoursAndMinutes,
+} from "./GoalsListItem";
+import sessionApi from "@/services/sessionApi";
+import { useAuthStore } from "@/context/useAuthStore";
 
 type GridItem = {
   title: string;
@@ -15,10 +20,33 @@ type GridItem = {
 const StatisticsGrid = () => {
   const activeGoal = useGoalStore((s) => s.activeGoal);
 
+  const user = useAuthStore((s) => s.user);
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [sessionDuration, setSessionDuration] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchSessionDuration = async () => {
+      if (user?.id) {
+        try {
+          const response = await sessionApi.get(`/${user.id}/today`, {
+            headers: {
+              "User-Timezone": userTimezone,
+            },
+          });
+          setSessionDuration(response.data);
+        } catch (err) {
+          
+        }
+      }
+    };
+
+    fetchSessionDuration();
+  }, [user?.id, userTimezone]);
+
   const lastSession = {
-    title: "Last Focus Session",
+    title: "Focus Sessions Today",
     subtitle: "Total Duration (No Breaks Included)",
-    value: "2 hrs",
+    value: sessionDuration !== null ? formatMinutesToHoursAndMinutes(sessionDuration) : '--',
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,
   };
 
