@@ -7,6 +7,7 @@ import {
 } from "./GoalsListItem";
 import sessionApi from "@/services/sessionApi";
 import { useAuthStore } from "@/context/useAuthStore";
+import userApi from "@/services/userApi";
 
 type GridItem = {
   title: string;
@@ -23,6 +24,7 @@ const StatisticsGrid = () => {
   const user = useAuthStore((s) => s.user);
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [sessionDuration, setSessionDuration] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
     const fetchSessionDuration = async () => {
@@ -38,11 +40,21 @@ const StatisticsGrid = () => {
       }
     };
 
+    const fetchStreak = async () => {
+      if (user?.id) {
+        try {
+          const response = await userApi.get(`/${user.id}/streak`);
+          setStreak(response.data);
+        } catch (err) {}
+      }
+    };
+
     fetchSessionDuration();
+    fetchStreak();
   }, [user?.id, userTimezone]);
 
   const lastSession = {
-    title: "Focus Sessions Today",
+    title: "Today's Focus",
     subtitle: "Total Duration (No Breaks Included)",
     value:
       sessionDuration !== 0
@@ -54,7 +66,7 @@ const StatisticsGrid = () => {
   const currentStreak = {
     title: "Current Streak",
     subtitle: "Days",
-    value: "5 Days",
+    value: streak + ' Days',
     icon: <IconFlame className="w-5 h-5 text-orange-500" />,
   };
 
