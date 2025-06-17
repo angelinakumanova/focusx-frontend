@@ -12,7 +12,7 @@ type GoalStore = {
 };
 
 export const useGoalStore = create<GoalStore>((set) => ({
-  goals: [],
+  goals: [] as Goal[],
   activeGoal: null,
   addGoal: async (goal, userId) => {
     await goalApi.post(`/${userId}`, goal);
