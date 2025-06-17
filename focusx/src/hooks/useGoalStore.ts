@@ -12,7 +12,7 @@ type GoalStore = {
 };
 
 export const useGoalStore = create<GoalStore>((set) => ({
-  goals: [] as Goal[],
+  goals: [],
   activeGoal: null,
   addGoal: async (goal, userId) => {
     await goalApi.post(`/${userId}`, goal);
@@ -29,7 +29,10 @@ export const useGoalStore = create<GoalStore>((set) => ({
 }));
 
 export async function fetchGoals(userId: string) {
-  return goalApi.get<Goal[]>(`/${userId}`).then((res) => {
-    useGoalStore.setState({ goals: res.data });
-  });
+  return goalApi
+    .get<Goal[]>(`/${userId}`)
+    .then((res) => {
+      useGoalStore.setState({ goals: res.data });
+    })
+    .catch(() => useGoalStore.setState({ goals: [] }));
 }
