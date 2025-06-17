@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const userApi = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://user-service-focusx.onrender.com/api",
   withCredentials: true,
 });
 

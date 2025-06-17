@@ -94,30 +94,28 @@ export default function SignUpForm() {
               setLoading(false);
 
               if (axios.isAxiosError(error)) {
-                if ((error.code = "ERR_NETWORK")) {
+                const fieldErrors = error.response?.data.fieldErrors;
+
+                if (!fieldErrors) {
                   setError("root", {
                     message: "An unexpected error occured. Try again.",
                   });
                   return;
                 }
 
-                const fieldErrors = error.response?.data.fieldErrors;
+                for (let err of fieldErrors) {
+                  const validFields = [
+                    "username",
+                    "email",
+                    "password",
+                    "confirmPassword",
+                  ] as const;
+                  type FormField = (typeof validFields)[number];
 
-                if (fieldErrors) {
-                  for (let err of fieldErrors) {
-                    const validFields = [
-                      "username",
-                      "email",
-                      "password",
-                      "confirmPassword",
-                    ] as const;
-                    type FormField = (typeof validFields)[number];
-
-                    if (validFields.includes(err.field as FormField)) {
-                      setError(err.field as FormField, {
-                        message: err.message,
-                      });
-                    }
+                  if (validFields.includes(err.field as FormField)) {
+                    setError(err.field as FormField, {
+                      message: err.message,
+                    });
                   }
                 }
               }

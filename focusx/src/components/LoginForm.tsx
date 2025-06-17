@@ -35,15 +35,19 @@ const LoginForm = () => {
       await login(data);
       navigate("/home");
     } catch (err) {
+      console.log(err);
+
       setLoading(false);
       if (axios.isAxiosError(err)) {
-        if ((err.code = "ERR_NETWORK")) {
-          setError("root", {
-            message: "An unexpected error occured. Try again.",
-          });
+        const message = err.response?.data.message;
+
+        if (message) {
+          setError("root", { message });
           return;
         }
-        setError("root", { message: err.response?.data.message });
+        setError("root", {
+          message: "An unexpected error occured. Try again.",
+        });
       }
     }
   };

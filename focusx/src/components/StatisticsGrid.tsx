@@ -27,6 +27,7 @@ const StatisticsGrid = () => {
   const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
+
     const fetchSessionDuration = async () => {
       if (user?.id) {
         try {
@@ -43,7 +44,7 @@ const StatisticsGrid = () => {
     const fetchStreak = async () => {
       if (user?.id) {
         try {
-          const response = await userApi.get(`/${user.id}/streak`);
+          const response = await userApi.get(`/users/${user.id}/streak`);
           setStreak(response.data);
         } catch (err) {}
       }
@@ -51,7 +52,7 @@ const StatisticsGrid = () => {
 
     fetchSessionDuration();
     fetchStreak();
-  }, [user?.id, userTimezone]);
+  }, [user?.id]);
 
   const lastSession = {
     title: "Today's Focus",
@@ -66,7 +67,7 @@ const StatisticsGrid = () => {
   const currentStreak = {
     title: "Current Streak",
     subtitle: "Days",
-    value: streak + ' Days',
+    value: streak + " Days",
     icon: <IconFlame className="w-5 h-5 text-orange-500" />,
   };
 

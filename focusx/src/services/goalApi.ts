@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const goalApi = axios.create({
-  baseURL: "http://localhost:8081/api/goals",
+  baseURL: "https://goal-service.onrender.com/api/goals",
   withCredentials: true,
 });
 
