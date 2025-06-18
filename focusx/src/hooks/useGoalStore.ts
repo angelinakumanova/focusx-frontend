@@ -29,10 +29,12 @@ export const useGoalStore = create<GoalStore>((set) => ({
 }));
 
 export async function fetchGoals(userId: string) {
-  return goalApi
-    .get<Goal[]>(`/${userId}`)
-    .then((res) => {
-      useGoalStore.setState({ goals: res.data });
-    })
-    .catch(() => useGoalStore.setState({ goals: [] }));
+  const res = await goalApi.get(`/${userId}`);
+  const data = res.data;
+
+  if (Array.isArray(data)) {
+    useGoalStore.setState({ goals: data });
+  } else {
+    useGoalStore.setState({ goals: [] });
+  }
 }
