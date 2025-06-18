@@ -16,8 +16,7 @@ export const useGoalStore = create<GoalStore>((set) => ({
   activeGoal: null,
   addGoal: async (goal, userId) => {
     await goalApi.post(`/${userId}`, goal);
-    const res = await goalApi.get<Goal[]>(`/${userId}`);
-    set({ goals: res.data });
+    await fetchGoals(userId);
   },
 
   removeGoal: async (goal, userId) => {
