@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 
 const GoalsList = () => {
-  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const user = useAuthStore((s) => s.user);
   const goals = useGoalStore((s) => s.goals);
+  const [isLoading, setLoading] = useState(goals.length === 0);
 
   useEffect(() => {
     const fetchData = async () => {

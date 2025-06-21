@@ -92,7 +92,7 @@ const GoalsListItem = ({ goal }: Props) => {
                 setError('There was an error with deleting goal. Try again later!'); 
               }
 
-              if (activeGoal === goal) setActiveGoal(null);
+              if (activeGoal?.id === goal.id) setActiveGoal(null);
             }}
             toggleVisibility={() => setModalVisibility(!isModalOpen)}
           />

@@ -16,7 +16,8 @@ const GoalForm = () => {
     .object({
       name: z
         .string({ message: "Please enter a title." })
-        .min(1, { message: "Please enter a title." }),
+        .min(1, { message: "Please enter a title." })
+        .max(60, { message: "Your title is too long!"}),
       type: z.enum(typeEnums),
       sets: z
         .number({
@@ -38,7 +39,8 @@ const GoalForm = () => {
         .optional(),
       reward: z
         .string({ message: "Let us know what reward you’ll give yourself!" })
-        .min(1, { message: "Let us know what reward you’ll give yourself!" }),
+        .min(1, { message: "Let us know what reward you’ll give yourself!" })
+        .max(60, { message: "Your reward's name is too long!"}),
     })
     .superRefine((data, ctx) => {
       if (data.type === "SESSION") {
@@ -103,12 +105,13 @@ const GoalForm = () => {
         onSubmit={handleSubmit(async (data) => {
           if (user) {
             try {
-              const goal = {...data, progress: 0 } as Goal;
+              const goal = { ...data, progress: 0 } as Goal;
               addGoal(goal, user.id);
               reset();
             } catch (err) {
               setError("root", {
-                message: "There was an error with adding a new goal. Please try again!",
+                message:
+                  "There was an error with adding a new goal. Please try again!",
               });
             }
           }
@@ -170,6 +173,8 @@ const GoalForm = () => {
               <input
                 type="number"
                 {...register("sets", { valueAsNumber: true })}
+                min={1}
+                max={10}
                 placeholder="e.g., 5"
                 className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
               />
@@ -183,6 +188,8 @@ const GoalForm = () => {
                 Session Duration (mins)
               </label>
               <input
+                min={1}
+                max={60}
                 type="number"
                 placeholder="e.g., 60"
                 {...register("duration", { valueAsNumber: true })}
@@ -202,6 +209,7 @@ const GoalForm = () => {
               Days in a Row
             </label>
             <input
+              min={1}
               type="number"
               placeholder="e.g., 7"
               {...register("days", { valueAsNumber: true })}

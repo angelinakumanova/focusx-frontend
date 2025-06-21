@@ -25,6 +25,7 @@ export const useGoalStore = create<GoalStore>((set) => ({
     await fetchGoals(userId);
   },
   setActiveGoal: (goal) => {
+    set({ activeGoal: goal });
     localStorage.setItem("goal", JSON.stringify(goal));
   },
   setGoals: (goals) => set({ goals }),
