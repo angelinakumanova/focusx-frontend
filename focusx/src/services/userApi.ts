@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const userApi = axios.create({
-  baseURL: "https://user-service-focusx.onrender.com/api",
+  baseURL: "https://user-service-focusx.up.railway.app/api",
   withCredentials: true,
 });
 

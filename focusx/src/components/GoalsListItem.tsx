@@ -25,19 +25,19 @@ const GoalsListItem = ({ goal }: Props) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className={`mb-5 bg-neutral-900 p-6 rounded-xl shadow-sm border  relative transition-all duration-300 ${
-        goal === activeGoal ? "border-green-600" : "border-neutral-800"
+        goal.id === activeGoal?.id ? "border-green-600" : "border-neutral-800"
       }`}
     >
       <div className="flex justify-between items-center mb-5">
         <button
           onClick={() => setActiveGoal(goal)}
           className={`px-4 py-2 text-xs font-medium rounded-lg transition-all hover:cursor-pointer ${
-            goal === activeGoal
+            goal.id === activeGoal?.id
               ? "bg-green-600 text-white hover:bg-green-500"
               : "bg-neutral-800 text-gray-300 hover:bg-neutral-700"
           }`}
         >
-          {goal === activeGoal ? "Tracking This Goal" : "Track This Goal"}
+          {goal.id === activeGoal?.id ? "Tracking This Goal" : "Track This Goal"}
         </button>
 
         <button

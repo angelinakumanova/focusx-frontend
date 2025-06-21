@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const sessionApi = axios.create({
-  baseURL: "https://session-service-6gnf.onrender.com/api/sessions",
+  baseURL: "https://session-service-focusx.up.railway.app/api/sessions",
   withCredentials: true,
 });
 

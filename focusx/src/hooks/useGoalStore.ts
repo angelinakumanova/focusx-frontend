@@ -13,8 +13,9 @@ type GoalStore = {
 
 export const useGoalStore = create<GoalStore>((set) => ({
   goals: [],
-  activeGoal: null,
+  activeGoal: JSON.parse(localStorage.getItem("goal") || "null") as Goal | null,
   addGoal: async (goal, userId) => {
+    set({ goals: [...useGoalStore.getState().goals, goal] });
     await goalApi.post(`/${userId}`, goal);
     await fetchGoals(userId);
   },
@@ -23,7 +24,9 @@ export const useGoalStore = create<GoalStore>((set) => ({
     await goalApi.delete(`/${goal.id}`);
     await fetchGoals(userId);
   },
-  setActiveGoal: (goal) => set({ activeGoal: goal }),
+  setActiveGoal: (goal) => {
+    localStorage.setItem("goal", JSON.stringify(goal));
+  },
   setGoals: (goals) => set({ goals }),
 }));
 
