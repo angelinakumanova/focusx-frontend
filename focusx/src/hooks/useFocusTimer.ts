@@ -16,6 +16,8 @@ export const useFocusTimer = ({
   sets,
   onComplete,
 }: FocusTimerOptions) => {
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -81,6 +83,7 @@ export const useFocusTimer = ({
         sessionApi.post("", {
           minutes,
           userId: useAuthStore.getState().user?.id,
+          userTimezone
         });
       } else {
         setCurrentSet((s) => s + 1);

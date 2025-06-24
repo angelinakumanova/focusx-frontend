@@ -15,7 +15,6 @@ export const useGoalStore = create<GoalStore>((set) => ({
   goals: [],
   activeGoal: JSON.parse(localStorage.getItem("goal") || "null") as Goal | null,
   addGoal: async (goal, userId) => {
-    set({ goals: [...useGoalStore.getState().goals, goal] });
     await goalApi.post(`/${userId}`, goal);
     await fetchGoals(userId);
   },

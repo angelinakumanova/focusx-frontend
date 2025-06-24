@@ -44,7 +44,11 @@ const StatisticsGrid = () => {
     const fetchStreak = async () => {
       if (user?.id) {
         try {
-          const response = await userApi.get(`/users/${user.id}/streak`);
+          const response = await userApi.get(`/users/${user.id}/streak`, {
+            headers: {
+              "timezone": userTimezone,
+            },
+          });
           setStreak(response.data);
         } catch (err) {}
       }
@@ -73,7 +77,7 @@ const StatisticsGrid = () => {
 
   const goal = {
     title: "Goal Progress",
-    subtitle: activeGoal ? activeGoal.name : "No Active Goal",
+    subtitle: activeGoal ? activeGoal.title : "No Active Goal",
     value: activeGoal ? `${calculateProgress(activeGoal)}%` : "--",
     icon: <IconCircleCheck className="w-5 h-5 text-green-500" />,
     isProgress: true,

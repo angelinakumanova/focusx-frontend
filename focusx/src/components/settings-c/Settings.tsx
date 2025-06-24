@@ -1,6 +1,5 @@
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { CheckboxToggle } from "../CheckboxToggle";
 import PopUpModal from "../PopUpModal";
 import UsernameSection from "./UsernameSection";
 import PasswordSection from "./PasswordSection";
@@ -18,23 +17,6 @@ const Settings = () => {
         <h1 className="text-4xl font-bold mb-2">Settings</h1>
         <p className="text-neutral-400">Manage your preferences and account.</p>
       </div>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Notifications</h2>
-        <div className="space-y-4 bg-neutral-800 rounded-2xl p-6">
-          <CheckboxToggle
-            label="Email Updates"
-            checked={true}
-            onChange={(val) => val}
-          />
-
-          <CheckboxToggle
-            label="Streak Reminders"
-            checked={true}
-            onChange={(val) => val}
-          />
-        </div>
-      </section>
 
       <section>
         <h2 className="text-2xl font-semibold mb-4">Account</h2>

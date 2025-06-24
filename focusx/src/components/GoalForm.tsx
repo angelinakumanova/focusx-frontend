@@ -3,6 +3,7 @@ import { useGoalStore } from "@/hooks/useGoalStore";
 import Goal, { typeEnums } from "@/interfaces/Goal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconCirclePlus, IconTarget } from "@tabler/icons-react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,33 +15,38 @@ const GoalForm = () => {
 
   const goalSchema = z
     .object({
-      name: z
+      title: z
         .string({ message: "Please enter a title." })
         .min(1, { message: "Please enter a title." })
-        .max(60, { message: "Your title is too long!"}),
+        .max(60, { message: "Your title is too long!" }),
       type: z.enum(typeEnums),
       sets: z
         .number({
           invalid_type_error:
             "Please enter how many sessions you plan to complete.",
         })
+        .min(1)
+        .max(10)
         .optional(),
       duration: z
         .number({
           invalid_type_error:
             "Please specify how long each session should be (in minutes).",
         })
+        .min(1)
+        .max(60)
         .optional(),
       days: z
         .number({
           invalid_type_error:
             "Please enter how many days the streak should be.",
         })
+        .min(1)
         .optional(),
       reward: z
         .string({ message: "Let us know what reward you’ll give yourself!" })
         .min(1, { message: "Let us know what reward you’ll give yourself!" })
-        .max(60, { message: "Your reward's name is too long!"}),
+        .max(60, { message: "Your reward's name is too long!" }),
     })
     .superRefine((data, ctx) => {
       if (data.type === "SESSION") {
@@ -48,7 +54,7 @@ const GoalForm = () => {
           ctx.addIssue({
             path: ["sets"],
             code: z.ZodIssueCode.custom,
-            message: "Sets is required for Session goals",
+            message: "Sets are required!",
           });
         }
 
@@ -56,7 +62,7 @@ const GoalForm = () => {
           ctx.addIssue({
             path: ["duration"],
             code: z.ZodIssueCode.custom,
-            message: "duration is required for Session goals",
+            message: "Duration is required!",
           });
         }
       }
@@ -66,7 +72,7 @@ const GoalForm = () => {
           ctx.addIssue({
             path: ["days"],
             code: z.ZodIssueCode.custom,
-            message: "streakDays is required for Streak goals",
+            message: "Days are required!",
           });
         }
       }
@@ -106,13 +112,38 @@ const GoalForm = () => {
           if (user) {
             try {
               const goal = { ...data, progress: 0 } as Goal;
-              addGoal(goal, user.id);
+              console.log(goal);
+              
+              await addGoal(goal, user.id);
               reset();
-            } catch (err) {
-              setError("root", {
-                message:
-                  "There was an error with adding a new goal. Please try again!",
-              });
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                const fieldErrors = error.response?.data.fieldErrors;
+
+                if (!fieldErrors) {
+                  setError("root", {
+                    message: "An unexpected error occured. Try again.",
+                  });
+                  return;
+                }
+
+                for (let err of fieldErrors) {
+                  const validFields = ["title", "type", "sets", "duration", "days", "reward"] as const;
+                  type FormField = (typeof validFields)[number];
+
+                  if (validFields.includes(err.field as FormField)) {
+                    setError(err.field as FormField, {
+                      message: err.message,
+                    });
+                  }
+                  
+                  return;
+                }
+                setError("root", {
+                  message:
+                    "There was an error with adding a new goal. Please try again!",
+                });
+              }
             }
           }
         })}
@@ -130,10 +161,12 @@ const GoalForm = () => {
             id="title"
             type="text"
             placeholder="e.g., Learn Italian"
-            {...register("name")}
+            {...register("title")}
             className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"
           />
-          {errors.name && <p className="text-red-600">{errors.name.message}</p>}
+          {errors.title && (
+            <p className="text-red-600">{errors.title.message}</p>
+          )}
         </div>
 
         {/* Goal Type Selector */}
@@ -173,7 +206,6 @@ const GoalForm = () => {
               <input
                 type="number"
                 {...register("sets", { valueAsNumber: true })}
-                min={1}
                 max={10}
                 placeholder="e.g., 5"
                 className="w-full p-3 bg-neutral-800 text-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-neutral-600"

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import PopUpModal from "../PopUpModal";
 import CompletedModal from "./CompletedModal";
 import TimeSelect from "./TimeSelect";
+import { useNavigationPrompt } from "@/lib/utils";
 
 const FocusTimer = () => {
   const [minutes, setMinutes] = useState<number>(25);
@@ -26,12 +27,15 @@ const FocusTimer = () => {
     setIsCompleted,
   } = useFocusTimer({ minutes, breakMinutes, sets });
 
+  useNavigationPrompt(isRunning);
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = ""; // Required for Chrome
     };
 
+    
     if (isRunning) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     }
@@ -81,7 +85,7 @@ const FocusTimer = () => {
         </>
       ) : (
         <>
-          <h2 className="text-3xl font-bold mb-6">Start a Focus Session</h2>
+          <h2 className="text-3xl font-bold mb-6">Focus Mode</h2>
           <div className="flex flex-wrap justify-center gap-6 mb-8">
             <TimeSelect
               label="Work (min)"

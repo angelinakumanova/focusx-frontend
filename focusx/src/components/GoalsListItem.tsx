@@ -49,7 +49,7 @@ const GoalsListItem = ({ goal }: Props) => {
       </div>
 
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-lg font-semibold text-white">{goal.name}</h3>
+        <h3 className="text-lg font-semibold text-white">{goal.title}</h3>
 
         <div className="bg-neutral-800 text-xs font-bold text-white px-2 py-1 rounded-full">
           {goal.type}
@@ -80,7 +80,7 @@ const GoalsListItem = ({ goal }: Props) => {
       <AnimatePresence mode="wait">
         {isModalOpen && (
           <PopUpModal
-            title={`Are you sure you want to delete "${goal.name}"`}
+            title={`Are you sure you want to delete "${goal.title}"`}
             confirmText="Delete"
             confirmFn={async () => {
               try {
@@ -94,7 +94,8 @@ const GoalsListItem = ({ goal }: Props) => {
 
               if (activeGoal?.id === goal.id) setActiveGoal(null);
             }}
-            toggleVisibility={() => setModalVisibility(!isModalOpen)}
+            toggleVisibility={() => {setModalVisibility(!isModalOpen); console.log(goal);
+            }}
           />
         )}
       </AnimatePresence>
