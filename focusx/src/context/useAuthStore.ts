@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import userApi from "@/services/userApi";
 import { FieldValues } from "react-hook-form";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -34,7 +35,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    await userApi.post("/auth/logout", {}, { withCredentials: true });
+    await axios.post("https://user-service-focusx.up.railway.app/logout", {}, { withCredentials: true });
     set({ user: null });
   },
 
