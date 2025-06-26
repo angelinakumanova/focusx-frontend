@@ -71,7 +71,7 @@ const StatisticsGrid = () => {
   const currentStreak = {
     title: "Current Streak",
     subtitle: "Days",
-    value: streak + " Days",
+    value: streak !== 0 ? `${streak} Days` : "--",
     icon: <IconFlame className="w-5 h-5 text-orange-500" />,
   };
 
