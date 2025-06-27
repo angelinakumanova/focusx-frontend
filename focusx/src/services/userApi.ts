@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const userApi = axios.create({
-  baseURL: "https://user-service-focusx.up.railway.app/api",
-  // baseURL: "http://localhost:8080/api",
+  // baseURL: "https://user-service-focusx.up.railway.app/api",
+  baseURL: "http://localhost:8080/api",
   withCredentials: true,
 });
 
