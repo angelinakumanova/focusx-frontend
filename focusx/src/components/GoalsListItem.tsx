@@ -66,7 +66,10 @@ const GoalsListItem = ({ goal }: Props) => {
           />
         </div>
         <p className="text-right text-xs text-gray-500 mt-1">
-          {calculateProgress(goal)}% completed
+          {calculateProgress(goal)}% / {
+            goal.type === 'SESSION' ?
+          formatMinutesToHoursAndMinutes(goal.progress) : `${goal.progress} days`
+          } completed
         </p>
       </div>
 

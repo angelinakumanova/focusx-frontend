@@ -36,7 +36,18 @@ export async function fetchGoals(userId: string) {
 
   if (Array.isArray(data)) {
     useGoalStore.setState({ goals: data });
+    let goal = localStorage.getItem("goal");
+
+    if (goal !== null) {
+      const parsedGoal = JSON.parse(goal) as Goal;
+      const foundGoal = data.find((g) => g.id === parsedGoal.id);
+
+      if (foundGoal !== undefined && parsedGoal.progress !== foundGoal.progress)
+        localStorage.setItem("goal", JSON.stringify(foundGoal));
+        useGoalStore.setState({ activeGoal: foundGoal});
+    }
   } else {
     useGoalStore.setState({ goals: [] });
+    localStorage.removeItem("goal");
   }
 }
