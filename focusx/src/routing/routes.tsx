@@ -8,10 +8,12 @@ import SettingsPage from "../pages/SettingsPage";
 import TimerPage from "../pages/TimerPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <ErrorDisplay />,
     element: <Layout />,
     children: [
       {
