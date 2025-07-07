@@ -7,13 +7,16 @@ import { z } from "zod";
 import { Label } from "../ui/auth-label";
 import { Input } from "../ui/auth-input";
 import ErrorResponse from "@/interfaces/ErrorResponse";
+import axios from "axios";
 
 const UsernameSection = () => {
   const { user, getUser } = useAuthStore();
   const [successMessage, setSucessMessage] = useState<string | null>(null);
 
   const usernameSchema = z.object({
-    username: z.string().min(1, { message: "Please enter a valid username" }),
+    username: z.string()
+    // .min(1, { message: "Please enter a valid username"}),
+
   });
 
   type UsernameFormData = z.infer<typeof usernameSchema>;
@@ -35,8 +38,9 @@ const UsernameSection = () => {
       <form
         onSubmit={handleSubmit((data) => {
           userApi
-            .put(`/users/${user?.id}/${data.username}`, {
+            .put(`/users/${user?.id}/username`, {username: data.username}, {
               withCredentials: true,
+            
             })
             .then(() => {
               getUser();
@@ -47,9 +51,40 @@ const UsernameSection = () => {
               }, 3000);
             })
             .catch((err) => {
-              const error = err.response.data as ErrorResponse;
+              if (axios.isAxiosError(err)) {
+                const response = err.response?.data as ErrorResponse;
+                console.log(response);
+                
+                const fieldErrors = response.fieldErrors;
 
-              setError("username", { message: error.message });
+                if (!fieldErrors) {
+                  setError("root", {
+                    message: response.message,
+                  });
+                  return;
+                }
+
+                for (let error of fieldErrors) {
+                  
+                  const validFields = [
+                    "username",
+                  ] as const;
+                  type FormField = (typeof validFields)[number];
+
+                  if (validFields.includes(error.field as FormField)) {
+                    setError(error.field as FormField, {
+                      message: error.message,
+                    });
+                  }
+
+                  return;
+                }
+
+                setError("root", {
+                  message:
+                    "There was an error with changing your username. Please try again!",
+                });
+              }
             });
         })}
         className="flex justify-between items-center gap-2"
@@ -74,6 +109,9 @@ const UsernameSection = () => {
       </form>
       {errors.username && (
         <p className="text-red-600">{errors.username.message}</p>
+      )}
+      {errors.root && (
+        <p className="text-red-600">{errors.root.message}</p>
       )}
       {successMessage && !errors.username && (
         <p className="text-green-600">{successMessage}</p>

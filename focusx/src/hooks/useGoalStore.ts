@@ -40,7 +40,7 @@ export async function fetchGoals(userId: string) {
 
     if (goal !== null) {
       const parsedGoal = JSON.parse(goal) as Goal;
-      const foundGoal = data.find((g) => g.id === parsedGoal.id);
+      const foundGoal = data.find((g) => g?.id === parsedGoal?.id);
 
       if (foundGoal !== undefined && parsedGoal.progress !== foundGoal.progress)
         localStorage.setItem("goal", JSON.stringify(foundGoal));

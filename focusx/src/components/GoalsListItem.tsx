@@ -97,8 +97,7 @@ const GoalsListItem = ({ goal }: Props) => {
 
               if (activeGoal?.id === goal.id) setActiveGoal(null);
             }}
-            toggleVisibility={() => {setModalVisibility(!isModalOpen); console.log(goal);
-            }}
+            toggleVisibility={() => setModalVisibility(!isModalOpen)}
           />
         )}
       </AnimatePresence>

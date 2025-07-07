@@ -5,9 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import userApi from "@/services/userApi";
 import { useState } from "react";
 import { useAuthStore } from "@/context/useAuthStore";
-import ErrorResponse from "@/interfaces/ErrorResponse";
 import { Label } from "../ui/auth-label";
 import { passwordSchema } from "../SignUpForm";
+import axios from "axios";
+import ErrorResponse from "@/interfaces/ErrorResponse";
 
 const PasswordSection = () => {
   const user = useAuthStore((s) => s.user);
@@ -58,9 +59,39 @@ const PasswordSection = () => {
               }, 3000);
             })
             .catch((err) => {
-              const error = err.response.data as ErrorResponse;
+              if (axios.isAxiosError(err)) {
+                const response = err.response?.data as ErrorResponse;
+                const fieldErrors = response.fieldErrors;
 
-              setError("root", { message: error.message });
+                if (!fieldErrors) {
+                  setError("root", {
+                    message: response.message,
+                  });
+                  return;
+                }
+
+                for (let error of fieldErrors) {
+                  const validFields = [
+                    "currentPassword",
+                    "newPassword",
+                    "confirmPassword",
+                  ] as const;
+                  type FormField = (typeof validFields)[number];
+
+                  if (validFields.includes(error.field as FormField)) {
+                    setError(error.field as FormField, {
+                      message: error.message,
+                    });
+                  }
+
+                  return;
+                }
+
+                setError("root", {
+                  message:
+                    "There was an error with changing your password. Please try again!",
+                });
+              }
             });
         })}
       >
