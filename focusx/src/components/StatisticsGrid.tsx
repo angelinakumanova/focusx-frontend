@@ -60,7 +60,7 @@ const StatisticsGrid = () => {
 
   const lastSession = {
     title: "Today's Focus",
-    subtitle: "Total Duration (No Breaks Included)",
+    subtitle: "Total Duration",
     value:
       sessionDuration !== 0
         ? formatMinutesToHoursAndMinutes(sessionDuration)
