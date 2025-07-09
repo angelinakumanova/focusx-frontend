@@ -7,6 +7,10 @@ import TimeSelect from "./TimeSelect";
 import { useNavigationPrompt } from "@/lib/utils";
 
 const FocusTimer = () => {
+  const activeGoal = JSON.parse(localStorage.getItem("goal") || "null");
+  console.log(activeGoal);
+  
+
   const [minutes, setMinutes] = useState<number>(25);
   const [breakMinutes, setBreakMinutes] = useState<number>(5);
   const [sets, setSets] = useState<number>(4);
@@ -35,7 +39,6 @@ const FocusTimer = () => {
       e.returnValue = ""; // Required for Chrome
     };
 
-    
     if (isRunning) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     }
@@ -85,7 +88,18 @@ const FocusTimer = () => {
         </>
       ) : (
         <>
-          <h2 className="text-3xl font-bold mb-6">Focus Mode</h2>
+          <h2 className="text-3xl font-bold mb-3">Focus Mode</h2>
+          <p className="mb-6">
+            {activeGoal !== null ? (
+              <>
+                You're focusing on{" "}
+                <span className="font-bold">"{activeGoal?.title}"</span>
+              </>
+            ) : (
+              "No goal is currently being tracked. This session won’t contribute to any goal progress."
+            )}
+          </p>
+
           <div className="flex flex-wrap justify-center gap-6 mb-8">
             <TimeSelect
               label="Work (min)"
