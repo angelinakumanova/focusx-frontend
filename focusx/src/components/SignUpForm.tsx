@@ -94,7 +94,16 @@ export default function SignUpForm() {
               setLoading(false);
 
               if (axios.isAxiosError(error)) {
-                const fieldErrors = error.response?.data.fieldErrors;
+                const response = error.response?.data;
+
+                if (error.response?.status === 429) {
+                  setError("root", {
+                    message: response,
+                  });
+                  return;
+                }
+
+                const fieldErrors = response.fieldErrors;
 
                 if (!fieldErrors) {
                   setError("root", {
