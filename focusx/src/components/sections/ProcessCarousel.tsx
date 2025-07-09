@@ -4,12 +4,12 @@ const ProcessCarousel = () => {
   const slideData = [
     {
       title: 'Set up your goal',
-      src: "/src/assets/videos/setting-up-a-goal.mp4",
+      src: "/videos/setting-up-a-goal.mp4",
       width: 'xl:w-[60%] '
     },
     {
       title: 'Track your goals and earn rewards!',
-      src: "/src/assets/videos/track-goal.mp4",
+      src: "/videos/track-goal.mp4",
       height: 'xl:w-[75%] '
     },
   ];

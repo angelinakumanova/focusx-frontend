@@ -26,7 +26,7 @@ export const useFocusTimer = ({
   const [onBreak, setOnBreak] = useState(false);
 
   const sessionAudioRef = useRef(
-    new Audio("/src/assets/sounds/session-start-and-break-sound.mp3")
+    new Audio("/sounds/session-start-and-break-sound.mp3")
   );
 
   const playSound = () => {
