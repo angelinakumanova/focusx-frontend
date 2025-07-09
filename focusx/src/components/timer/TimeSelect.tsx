@@ -11,7 +11,7 @@ const TimeSelect = ({ label, value, onChange, min, max }: Props) => {
     let val = Number(e.target.value);
 
 
-    const currentMin = min ? min : 0;
+    const currentMin = min ? min : 1;
     const currentMax = max ? max : 60;
     if (isNaN(val) || val < currentMin ) val = currentMin;
     if (val > currentMax) val = currentMax;

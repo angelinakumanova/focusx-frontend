@@ -53,8 +53,6 @@ const UsernameSection = () => {
             .catch((err) => {
               if (axios.isAxiosError(err)) {
                 const response = err.response?.data as ErrorResponse;
-                console.log(response);
-                
                 const fieldErrors = response.fieldErrors;
 
                 if (!fieldErrors) {
