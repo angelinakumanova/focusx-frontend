@@ -13,7 +13,7 @@ type GoalStore = {
 
 export const useGoalStore = create<GoalStore>((set) => ({
   goals: [],
-  activeGoal: JSON.parse(localStorage.getItem("goal") || "null") as Goal | null,
+  activeGoal: null,
   addGoal: async (goal, userId) => {
     await goalApi.post(`/${userId}`, goal);
     await fetchGoals(userId);
@@ -23,9 +23,9 @@ export const useGoalStore = create<GoalStore>((set) => ({
     await goalApi.delete(`/${goal.id}`);
     await fetchGoals(userId);
   },
-  setActiveGoal: (goal) => {
+  setActiveGoal: async (goal) => {
     set({ activeGoal: goal });
-    localStorage.setItem("goal", JSON.stringify(goal));
+    await goalApi.put(`/${goal?.id}/track`);
   },
   setGoals: (goals) => set({ goals }),
 }));
@@ -33,21 +33,23 @@ export const useGoalStore = create<GoalStore>((set) => ({
 export async function fetchGoals(userId: string) {
   const res = await goalApi.get(`/${userId}`);
   const data = res.data;
-
+  
   if (Array.isArray(data)) {
     useGoalStore.setState({ goals: data });
-    let goal = localStorage.getItem("goal");
-
-    if (goal !== null) {
-      const parsedGoal = JSON.parse(goal) as Goal;
-      const foundGoal = data.find((g) => g?.id === parsedGoal?.id);
-
-      if (foundGoal !== undefined && parsedGoal.progress !== foundGoal.progress)
-        localStorage.setItem("goal", JSON.stringify(foundGoal));
-        useGoalStore.setState({ activeGoal: foundGoal});
-    }
+    await fetchTrackingGoal(userId);
+    
   } else {
     useGoalStore.setState({ goals: [] });
-    localStorage.removeItem("goal");
+    useGoalStore.setState({ activeGoal: null })
   }
 }
+
+async function fetchTrackingGoal(userId: string) {
+  const res = await goalApi.get(`/${userId}/tracking-goal`);
+  const goal = res.data as Goal;
+
+  useGoalStore.setState({ activeGoal: goal});
+  localStorage.setItem("goal", JSON.stringify(goal));
+  
+}
+
