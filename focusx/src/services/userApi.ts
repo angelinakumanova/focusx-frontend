@@ -2,7 +2,6 @@ import axios from "axios";
 
 const userApi = axios.create({
   baseURL: "https://user-service-focusx.up.railway.app/api",
-  // baseURL: "http://localhost:8080/api",
   withCredentials: true,
 });
 
@@ -11,7 +10,11 @@ userApi.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
+    const isRefreshEndpoint = originalRequest.url?.includes("/auth/refresh");
+    if (
+      error.response?.status === 403 ||
+      (error.response?.status === 401 && !originalRequest._retry && !isRefreshEndpoint)
+    ) {
       originalRequest._retry = true;
 
       try {
