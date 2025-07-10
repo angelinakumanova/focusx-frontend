@@ -62,7 +62,7 @@ const StatisticsGrid = () => {
     title: "Today's Focus",
     subtitle: "Total Duration",
     value:
-      sessionDuration
+      sessionDuration !== 0
         ? formatMinutesToHoursAndMinutes(sessionDuration)
         : "--",
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,
@@ -71,7 +71,7 @@ const StatisticsGrid = () => {
   const currentStreak = {
     title: "Current Streak",
     subtitle: "Days",
-    value: streak ? `${streak} Days` : "--",
+    value: streak !== 0 ? `${streak} Days` : "--",
     icon: <IconFlame className="w-5 h-5 text-orange-500" />,
   };
 
