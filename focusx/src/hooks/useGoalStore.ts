@@ -38,10 +38,11 @@ export async function fetchGoals(userId: string) {
     useGoalStore.setState({ goals: data });
     await fetchTrackingGoal(userId);
     
-  } else {
-    useGoalStore.setState({ goals: [] });
-    useGoalStore.setState({ activeGoal: null })
-  }
+  } 
+  // else {
+  //   useGoalStore.setState({ goals: [] });
+  //   useGoalStore.setState({ activeGoal: null })
+  // }
 }
 
 async function fetchTrackingGoal(userId: string) {
