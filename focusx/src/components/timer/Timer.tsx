@@ -90,7 +90,7 @@ const FocusTimer = () => {
         <>
           <h2 className="text-3xl font-bold mb-3">Focus Mode</h2>
           <p className="mb-6">
-            {activeGoal !== null ? (
+            {activeGoal ? (
               <>
                 You're focusing on{" "}
                 <span className="font-bold">"{activeGoal?.title}"</span>
