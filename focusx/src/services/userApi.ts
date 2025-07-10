@@ -11,9 +11,10 @@ userApi.interceptors.response.use(
     const originalRequest = error.config;
 
     const isRefreshEndpoint = originalRequest.url?.includes("/auth/refresh");
+    const isAuthEndpoint = originalRequest.url?.includes("/auth/login") || originalRequest.url?.includes("/auth/register");
     if (
       error.response?.status === 403 ||
-      (error.response?.status === 401 && !originalRequest._retry && !isRefreshEndpoint)
+      (error.response?.status === 401 && !originalRequest._retry && !isRefreshEndpoint && !isAuthEndpoint)
     ) {
       originalRequest._retry = true;
 
@@ -24,7 +25,7 @@ userApi.interceptors.response.use(
 
         return userApi(originalRequest);
       } catch (refreshError) {
-        return Promise.reject(refreshError);
+        return Promise.reject(error);
       }
     }
 
