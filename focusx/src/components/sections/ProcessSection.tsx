@@ -15,6 +15,8 @@ const ProcessSection = () => {
     if (inView) setActiveSection(id);
   }, [inView, id, setActiveSection]);
 
+  const isMobile = window.innerWidth < 768;
+
   return (
     <>
       <SectionDivider />
@@ -34,7 +36,7 @@ const ProcessSection = () => {
             </p>
           </div>
 
-          <ProcessCarousel />
+          {!isMobile && <ProcessCarousel />}
         </div>
       </motion.div>
     </>
