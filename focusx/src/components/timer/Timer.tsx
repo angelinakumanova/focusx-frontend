@@ -8,9 +8,7 @@ import { useNavigationPrompt } from "@/lib/utils";
 
 const FocusTimer = () => {
   const activeGoal = JSON.parse(localStorage.getItem("goal") || "null");
-  console.log(activeGoal);
   
-
   const [minutes, setMinutes] = useState<number>(25);
   const [breakMinutes, setBreakMinutes] = useState<number>(5);
   const [sets, setSets] = useState<number>(4);

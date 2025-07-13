@@ -27,9 +27,9 @@ const StatisticsGrid = () => {
   const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
+    if (!user) return;
 
     const fetchSessionDuration = async () => {
-      if (user?.id) {
         try {
           const response = await sessionApi.get(`/${user.id}/today`, {
             headers: {
@@ -38,11 +38,9 @@ const StatisticsGrid = () => {
           });
           setSessionDuration(response.data);
         } catch (err) {}
-      }
     };
 
     const fetchStreak = async () => {
-      if (user?.id) {
         try {
           const response = await userApi.get(`/users/${user.id}/streak`, {
             headers: {
@@ -51,18 +49,17 @@ const StatisticsGrid = () => {
           });
           setStreak(response.data);
         } catch (err) {}
-      }
     };
 
     fetchSessionDuration();
     fetchStreak();
-  }, [user?.id]);
+  }, []);
 
   const lastSession = {
     title: "Today's Focus",
     subtitle: "Total Duration",
     value:
-      sessionDuration !== 0
+      sessionDuration !== 0 && sessionDuration
         ? formatMinutesToHoursAndMinutes(sessionDuration)
         : "--",
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,

@@ -35,9 +35,9 @@ const LoginForm = () => {
       await login(data);
       navigate("/home");
     } catch (err) {
-      console.log(err);
 
       setLoading(false);
+
       if (axios.isAxiosError(err)) {
         const message = err.response?.data.message;
 
