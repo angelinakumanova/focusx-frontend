@@ -7,6 +7,7 @@ import TimeSelect from "./TimeSelect";
 import { useNavigationPrompt } from "@/lib/utils";
 
 const FocusTimer = () => {
+  
   const activeGoal = JSON.parse(localStorage.getItem("goal") || "null");
   
   const [minutes, setMinutes] = useState<number>(25);

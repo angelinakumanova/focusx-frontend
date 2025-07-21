@@ -28,13 +28,8 @@ export const useFocusTimer = ({
 
   const onBreakRef = useRef(onBreak);
 
-  useEffect(() => {
-    onBreakRef.current = onBreak;
-  }, [onBreak]);
-
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const endTimeRef = useRef<number | null>(null);
-
 
   const playSound = () => {
     const audio = sessionAudio;
@@ -53,8 +48,11 @@ export const useFocusTimer = ({
         clearInterval(timerRef.current!);
         timerRef.current = null;
         handleSessionEnd();
+        document.title = 'FocusX';
       } else {
         setTimeLeft(diff);
+        document.title =
+          (onBreakRef.current ? "Break | " : "Focusing | ") + formatTime(diff);
       }
     }
   };
@@ -135,6 +133,8 @@ export const useFocusTimer = ({
     clearInterval(timerRef.current!);
     timerRef.current = null;
     endTimeRef.current = null;
+
+    document.title = 'FocusX';
   };
 
   const postSession = async () => {
@@ -148,8 +148,13 @@ export const useFocusTimer = ({
       });
     } catch (err) {
       console.log(err);
-      
     }
+  };
+
+  const formatTime = (sec: number): string => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
   useEffect(() => {
@@ -158,11 +163,9 @@ export const useFocusTimer = ({
     };
   }, []);
 
-  const formatTime = (sec: number): string => {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  };
+  useEffect(() => {
+    onBreakRef.current = onBreak;
+  }, [onBreak]);
 
   return {
     timeLeft,
