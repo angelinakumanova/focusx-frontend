@@ -48,11 +48,12 @@ const StatisticsGrid = () => {
             },
           });
           setStreak(response.data);
+          
         } catch (err) {}
-    };
-
-    fetchSessionDuration();
-    fetchStreak();
+      };
+      
+      fetchSessionDuration();
+      fetchStreak();
   }, []);
 
   const lastSession = {
