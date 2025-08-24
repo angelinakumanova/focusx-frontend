@@ -29,7 +29,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const response = await userApi.post("/auth/login", data, {
         withCredentials: true,
       });
-      console.log(response.data.access_token);
 
       localStorage.setItem("access_token", response.data.access_token);
 
@@ -42,7 +41,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     await userApi.get("/auth/logout", { withCredentials: true });
     localStorage.removeItem("access_token");
-    
+
     set({ user: null });
   },
 
