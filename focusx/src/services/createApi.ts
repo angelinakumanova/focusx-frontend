@@ -4,9 +4,14 @@ import { BASE_URLS } from "./baseUrls";
 const refreshURL = BASE_URLS.user + "/auth/refresh";
 
 export const createApi = (baseURL: string) => {
+  const accessToken = localStorage.getItem("access_token");
+
   const api = axios.create({
     baseURL,
     withCredentials: true,
+    headers: {
+      Authorization: accessToken ? "Bearer " + accessToken : null
+    }
   });
 
   api.interceptors.response.use(
@@ -28,9 +33,13 @@ export const createApi = (baseURL: string) => {
         originalRequest._retry = true;
 
         try {
-          await axios.post(refreshURL, null, {
+          const response = await axios.post(refreshURL, null, {
             withCredentials: true,
           });
+
+          const newToken = response.data.access_token;
+          localStorage.setItem("access_token", newToken);
+          
 
           return api(originalRequest);
         } catch (refreshError) {

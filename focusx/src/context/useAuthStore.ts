@@ -26,7 +26,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ loading: true });
 
     try {
-      await userApi.post("/auth/login", data, { withCredentials: true });
+      const response = await userApi.post("/auth/login", data, {
+        withCredentials: true,
+      });
+      console.log(response.data.access_token);
+
+      localStorage.setItem("access_token", response.data.access_token);
+
       get().getUser();
     } finally {
       set({ loading: false });
@@ -35,6 +41,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     await userApi.get("/auth/logout", { withCredentials: true });
+    localStorage.removeItem("access_token");
+    
     set({ user: null });
   },
 
@@ -57,8 +65,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   getUser: async () => {
-    const res = await userApi.get("/auth/me", { withCredentials: true });
+    const accessToken = localStorage.getItem("access_token");
 
-    set({ user: { id: res.data.id, username: res.data.username } });
+    if (accessToken) {
+      const res = await userApi.get("/auth/me", {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      });
+
+      set({ user: { id: res.data.id, username: res.data.username } });
+    }
   },
 }));
