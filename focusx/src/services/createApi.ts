@@ -10,8 +10,8 @@ export const createApi = (baseURL: string) => {
     baseURL,
     withCredentials: true,
     headers: {
-      Authorization: accessToken ? "Bearer " + accessToken : null
-    }
+      Authorization: accessToken ? "Bearer " + accessToken : null,
+    },
   });
 
   api.interceptors.response.use(
@@ -39,7 +39,8 @@ export const createApi = (baseURL: string) => {
 
           const newToken = response.data.access_token;
           localStorage.setItem("access_token", newToken);
-          
+
+          originalRequest.headers["Authorization"] = "Bearer " + newToken;
 
           return api(originalRequest);
         } catch (refreshError) {
