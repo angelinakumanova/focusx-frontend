@@ -70,6 +70,7 @@ export const useFocusTimer = ({
 
         startTicking();
       } else {
+        setOnBreak(true);
         setIsCompleted(true);
         setIsRunning(false);
         onComplete?.();
