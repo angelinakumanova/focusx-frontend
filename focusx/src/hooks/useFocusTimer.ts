@@ -27,6 +27,7 @@ export const useFocusTimer = ({
   const [onBreak, setOnBreak] = useState(false);
 
   const onBreakRef = useRef(onBreak);
+  const currentSetRef = useRef(currentSet);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const endTimeRef = useRef<number | null>(null);
@@ -48,7 +49,7 @@ export const useFocusTimer = ({
         clearInterval(timerRef.current!);
         timerRef.current = null;
         handleSessionEnd();
-        document.title = 'FocusX';
+        document.title = "FocusX";
       } else {
         setTimeLeft(diff);
         document.title =
@@ -58,10 +59,15 @@ export const useFocusTimer = ({
   };
 
   const handleSessionEnd = () => {
+
     if (!onBreakRef.current) {
       postSession();
 
-      if (currentSet < sets) {
+      console.log("Sets");
+      console.log(currentSetRef.current);
+      
+      
+      if (currentSetRef.current < sets) {
         playSound();
         setOnBreak(true);
         setTimeLeft(breakMinutes * 60);
@@ -70,7 +76,6 @@ export const useFocusTimer = ({
 
         startTicking();
       } else {
-        setOnBreak(true);
         setIsCompleted(true);
         setIsRunning(false);
         onComplete?.();
@@ -135,7 +140,7 @@ export const useFocusTimer = ({
     timerRef.current = null;
     endTimeRef.current = null;
 
-    document.title = 'FocusX';
+    document.title = "FocusX";
   };
 
   const postSession = async () => {
@@ -166,7 +171,10 @@ export const useFocusTimer = ({
 
   useEffect(() => {
     onBreakRef.current = onBreak;
-  }, [onBreak]);
+    currentSetRef.current = currentSet;
+  }, [onBreak, currentSet]);
+
+
 
   return {
     timeLeft,
