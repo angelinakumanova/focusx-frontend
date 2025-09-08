@@ -7,8 +7,12 @@ import TimeSelect from "./TimeSelect";
 import { useNavigationPrompt } from "@/lib/utils";
 
 const FocusTimer = () => {
-  
+
   const activeGoal = JSON.parse(localStorage.getItem("goal") || "null");
+  useEffect(() => {
+
+  }, [activeGoal])
+  
   
   const [minutes, setMinutes] = useState<number>(25);
   const [breakMinutes, setBreakMinutes] = useState<number>(5);
@@ -36,6 +40,7 @@ const FocusTimer = () => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = ""; // Required for Chrome
+      document.title = 'FocusX';
     };
 
     if (isRunning) {

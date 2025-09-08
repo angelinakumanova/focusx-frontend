@@ -63,10 +63,6 @@ export const useFocusTimer = ({
     if (!onBreakRef.current) {
       postSession();
 
-      console.log("Sets");
-      console.log(currentSetRef.current);
-      
-      
       if (currentSetRef.current < sets) {
         playSound();
         setOnBreak(true);

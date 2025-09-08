@@ -7,11 +7,12 @@ import axios from "axios";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { z } from "zod";
 import { BottomGradient } from "./BottomGradient";
 import Logo from "./Logo";
 import Spinner from "./Spinner";
+import PopUpModal from "./PopUpModal";
 
 export const passwordSchema = z
   .string()
@@ -32,6 +33,7 @@ export const passwordSchema = z
 
 export default function SignUpForm() {
   const [isLoading, setLoading] = useState(false);
+  const [isRegistered, setRegistered] = useState(false);
 
   const schema = z
     .object({
@@ -62,7 +64,6 @@ export default function SignUpForm() {
     resolver: zodResolver(schema),
   });
 
-  const navigate = useNavigate();
 
   return (
     <>
@@ -88,10 +89,11 @@ export default function SignUpForm() {
 
             try {
               await userApi.post("/auth/register", data);
+              localStorage.setItem("pendingEmail", data.email);
+              setRegistered(true);
+
               reset();
-              navigate("/login");
             } catch (error) {
-              setLoading(false);
 
               if (axios.isAxiosError(error)) {
                 const response = error.response?.data;
@@ -128,6 +130,8 @@ export default function SignUpForm() {
                   }
                 }
               }
+            } finally {
+              setLoading(false);
             }
           })}
         >
@@ -210,6 +214,17 @@ export default function SignUpForm() {
             </Link>
           </div>
         </form>
+
+        {isRegistered && <PopUpModal 
+        title="A verification email has been sent" 
+        subtitle={`We’ve sent a verification link to ${localStorage.getItem("pendingEmail")}.
+         Please check your inbox and click the link to activate your account.
+         Didn’t get the email? Check your spam folder or click below to resend it.`}
+        confirmFn={() => console.log("Resent")}
+        confirmText="Resend"
+        key={"verification-pop-up"}
+        toggleVisibility={() => setRegistered(false)}
+        />}
       </motion.div>
     </>
   );

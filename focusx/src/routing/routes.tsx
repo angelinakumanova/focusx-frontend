@@ -9,6 +9,7 @@ import TimerPage from "../pages/TimerPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import ErrorDisplay from "@/components/ErrorDisplay";
+import Verification from "@/components/Verification";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
           { index: true, element: <LandingPage /> },
           { path: "register", element: <SignUpForm /> },
           { path: "login", element: <LoginForm /> },
+          { path: "verify", element: <Verification />}
         ],
       },
 
