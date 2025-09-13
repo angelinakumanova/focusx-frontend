@@ -40,7 +40,6 @@ const FocusTimer = () => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = ""; // Required for Chrome
-      document.title = 'FocusX';
     };
 
     if (isRunning) {

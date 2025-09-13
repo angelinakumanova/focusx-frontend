@@ -1,44 +1,57 @@
-import { useEffect, useState } from "react";
-import Spinner from "./Spinner";
-import { useSearchParams } from "react-router-dom";
-import userApi from "@/services/userApi";
+import ErrorDisplay from "./ErrorDisplay";
 
 const Verification = () => {
-  const [status, setStatus] = useState("verifying");
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code");
+  const pendingEmail = localStorage.getItem('pendingEmail');
 
 
-  useEffect(() => {
-    async function verify() {
-      if (code) {
-        try {
-          await userApi.post(`/auth/verify?code=${code}`);
-          setStatus("success");
+  // useEffect(() => {
+  //   async function verify() {
+  //     try {
+  //       await userApi.post(`/auth/verify?code=${code}`);
+  //       setStatus("success");
 
-          setTimeout(() => {
-            window.location.href = "/home";
-          }, 5000);
-        } catch {
-          setStatus("error");
-        }
-      } else {
-        setStatus("error");
-      }
-    }
+  //       setTimeout(() => {
+  //         window.location.href = "/home";
+  //       }, 5000);
+  //     } catch {
+  //       setStatus("error");
+  //     }
+  //   }
 
-    verify();
-  }, [code]);
+  //   verify();
+  // }, [code]);
+
+  if (!pendingEmail) {
+    return <ErrorDisplay />;
+  }
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div className="flex flex-col justify-center items-center gap-4">
-        {status === "verifying" && <Spinner width="w-16" />}
-        <h1 className="text-4xl font-bold uppercase">
-          {status === "success"
-            ? "Your account has been verified"
-            : "Invalid or expired link"}
+    <div className="w-screen h-screen flex justify-center items-center">
+      <div className="max-w-2xl p-4">
+        <h1 className="text-xl font-semibold mb-3">
+          A verification email has been sent
         </h1>
+
+        <p className="text-md text-gray-300 mb-2">{`We’ve sent a verification link to ${localStorage.getItem(
+          "pendingEmail"
+        )}.
+         Please check your inbox and click the link to activate your account.`}</p>
+        <p className="text-xs font-bold text-gray-400 mb-6">
+          Didn’t get the email? Check your spam folder or click below to resend
+          it.
+        </p>
+
+        <div className="flex items-start flex-row-reverse justify-end gap-2">
+          {/* {error && (
+            <p className="text-right text-base mt-2 text-red-600 opacity-70">
+              An error occured, please try again!
+            </p>
+          )} */}
+
+          <button className="w-48 rounded-sm px-4 py-2 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer transition-colors text-sm">
+            Resend
+          </button>
+        </div>
       </div>
     </div>
   );

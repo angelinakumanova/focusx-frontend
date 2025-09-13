@@ -112,7 +112,6 @@ const GoalForm = () => {
           if (user) {
             try {
               const goal = { ...data, progress: 0 } as Goal;
-              console.log(goal);
               
               await addGoal(goal, user.id);
               reset();

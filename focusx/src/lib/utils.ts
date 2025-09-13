@@ -1,10 +1,10 @@
-import { clsx, type ClassValue } from "clsx"
+import { clsx, type ClassValue } from "clsx";
 import { useEffect } from "react";
 import { useBlocker } from "react-router-dom";
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function useNavigationPrompt(shouldBlock: boolean) {
@@ -12,9 +12,12 @@ export function useNavigationPrompt(shouldBlock: boolean) {
 
   useEffect(() => {
     if (blocker.state === "blocked") {
-      const confirm = window.confirm("You’ll lose your focus session. Continue?");
+      const confirm = window.confirm(
+        "You’ll lose your focus session. Continue?"
+      );
       if (confirm) {
         blocker.proceed();
+        document.title = "FocusX";
       } else {
         blocker.reset();
       }
