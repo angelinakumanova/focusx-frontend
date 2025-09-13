@@ -31,11 +31,11 @@ const LoginForm = () => {
 
   const handleLogin = async (data: FieldValues) => {
     setLoading(true);
+
     try {
       await login(data);
       navigate("/home");
     } catch (err) {
-
       setLoading(false);
 
       if (axios.isAxiosError(err)) {

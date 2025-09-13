@@ -9,6 +9,7 @@ import TimerPage from "../pages/TimerPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import ErrorDisplay from "@/components/ErrorDisplay";
+import VerificationNotice from "@/components/VerificationNotice";
 import Verification from "@/components/Verification";
 
 const router = createBrowserRouter([
@@ -18,12 +19,17 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
+        children: [
+          { path: "verification", element: <VerificationNotice /> },
+          { path: "verify", element: <Verification /> },
+        ],
+      },
+      {
         element: <PublicRoute />,
         children: [
           { index: true, element: <LandingPage /> },
           { path: "register", element: <SignUpForm /> },
           { path: "login", element: <LoginForm /> },
-          { path: "verify", element: <Verification />}
         ],
       },
 

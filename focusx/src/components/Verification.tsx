@@ -1,60 +1,68 @@
+import userApi from "@/services/userApi";
 import ErrorDisplay from "./ErrorDisplay";
+import { useEffect, useState } from "react";
 
 const Verification = () => {
-  const pendingEmail = localStorage.getItem('pendingEmail');
+  const [status, setStatus] = useState<"pending" | "success" | "error">(
+    "error"
+  );
 
+  useEffect(() => {
+    async function verify() {
+      const verificationToken = localStorage.getItem("verification_token");
 
-  // useEffect(() => {
-  //   async function verify() {
-  //     try {
-  //       await userApi.post(`/auth/verify?code=${code}`);
-  //       setStatus("success");
+      if (verificationToken) {
+        setStatus('pending');
 
-  //       setTimeout(() => {
-  //         window.location.href = "/home";
-  //       }, 5000);
-  //     } catch {
-  //       setStatus("error");
-  //     }
-  //   }
+        try {
+          await userApi.post(
+            `/auth/verify`,
+            {}, 
+            {
+              headers: {
+                Authorization: "Bearer " + verificationToken,
+              },
+            }
+          );
 
-  //   verify();
-  // }, [code]);
+          localStorage.removeItem('verification_token');
+          localStorage.removeItem('pending_email');
 
-  if (!pendingEmail) {
+          setStatus('success');
+
+          setTimeout(() => {
+            window.location.href = "/home";
+          }, 5000);
+        } catch {
+          setStatus("error");
+        }
+      }
+    }
+
+    verify();
+  }, []);
+
+  if (status === 'success') {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <p className="text-3xl mb-3">Your account has been verified! <span className="font-bold">Welcome to FocusX!</span></p>
+      </div>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <p className="text-3xl font-semibold mb-3">Verifying your account...</p>
+      </div>
+    );
+  }
+
+  if (status === "error") {
     return <ErrorDisplay />;
   }
 
-  return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className="max-w-2xl p-4">
-        <h1 className="text-xl font-semibold mb-3">
-          A verification email has been sent
-        </h1>
 
-        <p className="text-md text-gray-300 mb-2">{`We’ve sent a verification link to ${localStorage.getItem(
-          "pendingEmail"
-        )}.
-         Please check your inbox and click the link to activate your account.`}</p>
-        <p className="text-xs font-bold text-gray-400 mb-6">
-          Didn’t get the email? Check your spam folder or click below to resend
-          it.
-        </p>
-
-        <div className="flex items-start flex-row-reverse justify-end gap-2">
-          {/* {error && (
-            <p className="text-right text-base mt-2 text-red-600 opacity-70">
-              An error occured, please try again!
-            </p>
-          )} */}
-
-          <button className="w-48 rounded-sm px-4 py-2 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer transition-colors text-sm">
-            Resend
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export default Verification;

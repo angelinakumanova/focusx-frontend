@@ -88,10 +88,12 @@ export default function SignUpForm() {
             setLoading(true);
 
             try {
-              await userApi.post("/auth/register", data);
-              localStorage.setItem("pendingEmail", data.email);
+              const response = await userApi.post("/auth/register", data);
+
+              localStorage.setItem("pending_email", data.email);
+              localStorage.setItem("verification_token", response.data.verification_token);
               
-              navigate('/verify');
+              navigate('/verification');
               reset();
             } catch (error) {
 
