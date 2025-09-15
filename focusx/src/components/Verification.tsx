@@ -3,17 +3,19 @@ import ErrorDisplay from "./ErrorDisplay";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import LoadingScreen from "./LoadingScreen";
+import axios from "axios";
 
 const Verification = () => {
-  const [status, setStatus] = useState<"loading" | "pending" | "success" | "invalid" | "error">(
-    "loading"
-  );
+  const [status, setStatus] = useState<
+    "loading" | "pending" | "success" | "invalid" | "error"
+  >("loading");
 
   const [searchParams] = useSearchParams();
   const verificationCode = searchParams.get("verificationCode");
 
   useEffect(() => {
     async function verify() {
+      console.log(verificationCode);
 
       if (verificationCode) {
         setStatus("pending");
@@ -28,7 +30,14 @@ const Verification = () => {
           setTimeout(() => {
             window.location.href = "/login";
           }, 5000);
-        } catch {
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 400) {
+              setStatus("invalid");
+              return;
+            }
+          }
+
           setStatus("error");
         }
       }
@@ -37,15 +46,22 @@ const Verification = () => {
     verify();
   }, []);
 
-  if (status === 'loading') {
-    return <LoadingScreen />
+  if (status === "loading") {
+    return <LoadingScreen />;
   }
-
 
   if (status === "pending") {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
-        <p className="text-3xl font-semibold mb-3">Verifying your account...</p>
+        <p className="text-3xl font-semibold mb-3 uppercase">Verifying your account...</p>
+      </div>
+    );
+  }
+
+  if (status === "invalid") {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <p className="text-3xl font-semibold mb-3 uppercase">Invalid or expired link</p>
       </div>
     );
   }
@@ -60,8 +76,6 @@ const Verification = () => {
       </div>
     );
   }
-
-  
 
   if (status === "error") {
     return <ErrorDisplay />;
