@@ -91,7 +91,7 @@ export default function SignUpForm() {
               const response = await userApi.post("/auth/register", data);
 
               localStorage.setItem("pending_email", data.email);
-              localStorage.setItem("verification_token", response.data.verification_token);
+              sessionStorage.setItem("user_id", response.data.user_id);
               
               navigate('/verification');
               reset();

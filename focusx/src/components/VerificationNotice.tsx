@@ -6,9 +6,9 @@ import { useState } from "react";
 const VerificationNotice = () => {
   const [error, setError] = useState<string | null>();
   const [isResent, setResent] = useState(false);
-  const verificationToken = localStorage.getItem("verification_token");
+  const pendingUserId = sessionStorage.getItem("user_id");
 
-  return verificationToken ? (
+  return pendingUserId ? (
     <div className="w-screen h-screen flex justify-center items-center">
       <div className="max-w-2xl p-4">
         <h1 className="text-xl font-semibold mb-3">
