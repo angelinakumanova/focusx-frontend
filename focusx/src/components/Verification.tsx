@@ -1,37 +1,32 @@
 import userApi from "@/services/userApi";
 import ErrorDisplay from "./ErrorDisplay";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import LoadingScreen from "./LoadingScreen";
 
 const Verification = () => {
-  const [status, setStatus] = useState<"pending" | "success" | "error">(
-    "error"
+  const [status, setStatus] = useState<"loading" | "pending" | "success" | "invalid" | "error">(
+    "loading"
   );
+
+  const [searchParams] = useSearchParams();
+  const verificationCode = searchParams.get("verificationCode");
 
   useEffect(() => {
     async function verify() {
-      const verificationToken = localStorage.getItem("verification_token");
 
-      if (verificationToken) {
-        setStatus('pending');
+      if (verificationCode) {
+        setStatus("pending");
 
         try {
           await userApi.post(
-            `/auth/verify`,
-            {}, 
-            {
-              headers: {
-                Authorization: "Bearer " + verificationToken,
-              },
-            }
+            `/auth/verify?verificationCode=${verificationCode}`
           );
 
-          localStorage.removeItem('verification_token');
-          localStorage.removeItem('pending_email');
-
-          setStatus('success');
+          setStatus("success");
 
           setTimeout(() => {
-            window.location.href = "/home";
+            window.location.href = "/login";
           }, 5000);
         } catch {
           setStatus("error");
@@ -42,13 +37,10 @@ const Verification = () => {
     verify();
   }, []);
 
-  if (status === 'success') {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center">
-        <p className="text-3xl mb-3">Your account has been verified! <span className="font-bold">Welcome to FocusX!</span></p>
-      </div>
-    );
+  if (status === 'loading') {
+    return <LoadingScreen />
   }
+
 
   if (status === "pending") {
     return (
@@ -58,11 +50,22 @@ const Verification = () => {
     );
   }
 
+  if (status === "success") {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <p className="text-3xl mb-3">
+          Your account has been verified!{" "}
+          <span className="font-bold">Welcome to FocusX!</span>
+        </p>
+      </div>
+    );
+  }
+
+  
+
   if (status === "error") {
     return <ErrorDisplay />;
   }
-
-
 };
 
 export default Verification;
