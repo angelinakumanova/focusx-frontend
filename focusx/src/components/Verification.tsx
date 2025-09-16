@@ -12,18 +12,20 @@ const Verification = () => {
 
   const [searchParams] = useSearchParams();
   const verificationCode = searchParams.get("verificationCode");
+  const isPending = sessionStorage.getItem("pendingVerification");
 
   useEffect(() => {
     async function verify() {
-      console.log(verificationCode);
-
-      if (verificationCode) {
+      if (verificationCode && isPending) {
         setStatus("pending");
 
         try {
           await userApi.post(
             `/auth/verify?verificationCode=${verificationCode}`
           );
+
+          sessionStorage.removeItem("pendingVerification");
+          sessionStorage.removeItem("pendingEmail");
 
           setStatus("success");
 
@@ -37,10 +39,9 @@ const Verification = () => {
               return;
             }
           }
-
-          setStatus("error");
         }
       }
+      setStatus("error");
     }
 
     verify();
@@ -53,7 +54,9 @@ const Verification = () => {
   if (status === "pending") {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
-        <p className="text-3xl font-semibold mb-3 uppercase">Verifying your account...</p>
+        <p className="text-3xl font-semibold mb-3 uppercase">
+          Verifying your account...
+        </p>
       </div>
     );
   }
@@ -61,7 +64,9 @@ const Verification = () => {
   if (status === "invalid") {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
-        <p className="text-3xl font-semibold mb-3 uppercase">Invalid or expired link</p>
+        <p className="text-3xl font-semibold mb-3 uppercase">
+          Invalid or expired link
+        </p>
       </div>
     );
   }

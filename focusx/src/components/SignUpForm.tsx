@@ -88,10 +88,10 @@ export default function SignUpForm() {
             setLoading(true);
 
             try {
-              const response = await userApi.post("/auth/register", data);
+              await userApi.post("/auth/register", data);
 
-              localStorage.setItem("pending_email", data.email);
-              sessionStorage.setItem("user_id", response.data.user_id);
+              sessionStorage.setItem("pendingEmail", data.email);
+              sessionStorage.setItem("pendingVerification", "true");
               
               navigate('/verification');
               reset();
@@ -191,7 +191,7 @@ export default function SignUpForm() {
           </div>
 
           {errors.root && (
-            <p className="text-red-600 -mt-2 mb-1">{errors.root.message}</p>
+            <p className="text-red-600 mb-1">{errors.root.message}</p>
           )}
 
           <button

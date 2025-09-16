@@ -5,19 +5,19 @@ import { useState } from "react";
 
 const VerificationNotice = () => {
   const [error, setError] = useState<string | null>();
+  const [success, setSuccess] = useState<string | null>();
   const [isResent, setResent] = useState(false);
-  const pendingUserId = sessionStorage.getItem("user_id");
+  const isPending = sessionStorage.getItem("pendingVerification");
+  const email = sessionStorage.getItem("pendingEmail");
 
-  return pendingUserId ? (
+  return isPending === 'true' ? (
     <div className="w-screen h-screen flex justify-center items-center">
       <div className="max-w-2xl p-4">
         <h1 className="text-xl font-semibold mb-3">
           A verification email has been sent
         </h1>
 
-        <p className="text-md text-gray-300 mb-2">{`We’ve sent a verification link to ${localStorage.getItem(
-          "pending_email"
-        )}.
+        <p className="text-md text-gray-300 mb-2">{`We’ve sent a verification link to ${email}.
          Please check your inbox and click the link to activate your account.`}</p>
         <p className="text-xs font-bold text-gray-400 mb-6">
           Didn’t get the email? Check your spam folder or click below to resend
@@ -26,8 +26,14 @@ const VerificationNotice = () => {
 
         <div className="flex items-start flex-row-reverse justify-end gap-2">
           {error && (
-            <p className="text-right text-base mt-2 text-red-600 opacity-70">
+            <p className="text-right text-base mt-2 text-red-600 opacity-80">
               {error}
+            </p>
+          )}
+
+          {success && (
+            <p className="text-right text-base mt-2 text-green-600 opacity-80">
+              {success}
             </p>
           )}
 
@@ -38,11 +44,11 @@ const VerificationNotice = () => {
             className={
               "w-48 rounded-sm px-4 py-2 bg-gray-700 transition-colors text-sm " +
               (isResent
-                ? "opacity-50 cursor-not-allowed" 
+                ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gray-600 hover:cursor-pointer")
             }
           >
-            Resend
+            {isResent ? "Sent" : "Resend"}
           </button>
         </div>
       </div>
@@ -52,16 +58,14 @@ const VerificationNotice = () => {
   );
 
   async function resendVerification() {
-    const email = localStorage.getItem("pending_email");
+    const email = sessionStorage.getItem("pendingEmail");
+
     try {
-      const response = await userApi.post("/auth/resend-verification", {
+      await userApi.post("/auth/resend-verification", {
         email,
       });
 
-      localStorage.setItem(
-        "verification_token",
-        response.data.verification_token
-      );
+      setSuccess("New verification link has been sent to your email!");
       setResent(true);
     } catch (error) {
       if (axios.isAxiosError(error)) {
