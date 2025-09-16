@@ -40,6 +40,8 @@ const Verification = () => {
             }
           }
         }
+
+        return;
       }
       setStatus("error");
     }
