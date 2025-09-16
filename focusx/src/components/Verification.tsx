@@ -12,7 +12,7 @@ const Verification = () => {
 
   const [searchParams] = useSearchParams();
   const verificationCode = searchParams.get("verificationCode");
-  const isPending = sessionStorage.getItem("pendingVerification");
+  const isPending = localStorage.getItem("pendingVerification");
 
   useEffect(() => {
     async function verify() {
@@ -24,7 +24,7 @@ const Verification = () => {
             `/auth/verify?verificationCode=${verificationCode}`
           );
 
-          sessionStorage.removeItem("pendingVerification");
+          localStorage.removeItem("pendingVerification");
           sessionStorage.removeItem("pendingEmail");
 
           setStatus("success");

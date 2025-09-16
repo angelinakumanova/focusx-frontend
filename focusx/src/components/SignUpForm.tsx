@@ -91,7 +91,7 @@ export default function SignUpForm() {
               await userApi.post("/auth/register", data);
 
               sessionStorage.setItem("pendingEmail", data.email);
-              sessionStorage.setItem("pendingVerification", "true");
+              localStorage.setItem("pendingVerification", "true");
               
               navigate('/verification');
               reset();
