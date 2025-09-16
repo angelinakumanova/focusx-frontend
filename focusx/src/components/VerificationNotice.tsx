@@ -7,7 +7,7 @@ const VerificationNotice = () => {
   const [error, setError] = useState<string | null>();
   const [success, setSuccess] = useState<string | null>();
   const [isResent, setResent] = useState(false);
-  const isPending = sessionStorage.getItem("pendingVerification");
+  const isPending = localStorage.getItem("pendingVerification");
   const email = sessionStorage.getItem("pendingEmail");
 
   return isPending === 'true' ? (
