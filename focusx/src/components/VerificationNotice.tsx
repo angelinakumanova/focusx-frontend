@@ -6,11 +6,13 @@ import { useState } from "react";
 const VerificationNotice = () => {
   const [error, setError] = useState<string | null>();
   const [success, setSuccess] = useState<string | null>();
+  const [isResendLimit, setResendLimit] = useState(false);
   const [isResent, setResent] = useState(false);
+  
   const isPending = localStorage.getItem("pendingVerification");
   const email = sessionStorage.getItem("pendingEmail");
 
-  return isPending === 'true' ? (
+  return isPending === "true" ? (
     <div className="w-screen h-screen flex justify-center items-center">
       <div className="max-w-2xl p-4">
         <h1 className="text-xl font-semibold mb-3">
@@ -40,15 +42,15 @@ const VerificationNotice = () => {
           <button
             type="button"
             onClick={resendVerification}
-            disabled={isResent}
+            disabled={isResendLimit || isResent}
             className={
               "w-48 rounded-sm px-4 py-2 bg-gray-700 transition-colors text-sm " +
-              (isResent
+              (isResendLimit
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gray-600 hover:cursor-pointer")
             }
           >
-            {isResent ? "Sent" : "Resend"}
+            {isResendLimit ? "Try Again Later" : isResent ? "Sent" : "Resend"}
           </button>
         </div>
       </div>
@@ -65,10 +67,16 @@ const VerificationNotice = () => {
         email,
       });
 
-      setSuccess("New verification link has been sent to your email!");
       setResent(true);
+      setSuccess("New verification link has been sent to your email!");
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        if (error.response?.status === 429) {
+          setError("You have sent too many requests. Try again in an hour.");
+          setResendLimit(true);
+          return;
+        }
+
         setError("An error occured, please try again!");
       }
     }
