@@ -39,9 +39,12 @@ const LoginForm = () => {
       setLoading(false);
 
       if (axios.isAxiosError(err)) {
-
+        
         if (err.response?.status === 403) {
+          const email = err.response?.data.email;
           localStorage.setItem('pendingVerification', 'true');
+          sessionStorage.setItem('pendingEmail', email);
+          
           navigate("/verification");
 
           return;
