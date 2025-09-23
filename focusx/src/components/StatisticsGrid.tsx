@@ -37,7 +37,9 @@ const StatisticsGrid = () => {
             },
           });
           setSessionDuration(response.data);
-        } catch (err) {}
+        } catch (err) {
+          setSessionDuration(-1);
+        }
     };
 
     const fetchStreak = async () => {
@@ -49,7 +51,9 @@ const StatisticsGrid = () => {
           });
           setStreak(response.data);
           
-        } catch (err) {}
+        } catch (err) {
+          setStreak(-1);
+        }
       };
       
       fetchSessionDuration();
@@ -60,16 +64,16 @@ const StatisticsGrid = () => {
     title: "Today's Focus",
     subtitle: "Total Duration",
     value:
-      sessionDuration !== 0 && sessionDuration
+      sessionDuration >= 0
         ? formatMinutesToHoursAndMinutes(sessionDuration)
-        : "--",
+        : "N/A",
     icon: <IconClock className="w-5 h-5 text-neutral-500" />,
   };
 
   const currentStreak = {
     title: "Current Streak",
     subtitle: "Days",
-    value: streak !== 0 ? `${streak} Days` : "--",
+    value: streak >= 0 ? `${streak} Days` : "N/A",
     icon: <IconFlame className="w-5 h-5 text-orange-500" />,
   };
 

@@ -47,6 +47,7 @@ const FocusTimer = () => {
     }
 
     return () => {
+      document.title = 'FocusX';
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isRunning]);

@@ -20,7 +20,7 @@ const CompletedModal = ({ onClose }: Props) => {
             <IconConfetti className="w-12 h-12 text-yellow-400 animate-bounce" />
           </div>
 
-          <h2 className="text-3xl font-bold text-white">Session Complete</h2>
+          <h2 className="text-3xl font-bold text-white">Focus Completed</h2>
 
           <p className="text-base text-zinc-300">
             You've finished all your focus sets. Take a break or start another

@@ -127,6 +127,8 @@ const formatGoal = (goal: Goal) => {
 };
 
 export const formatMinutesToHoursAndMinutes = (minutes: number): string => {
+  if (minutes === 0) return "0m";
+  
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   const hStr = hours > 0 ? `${hours}h` : "";
