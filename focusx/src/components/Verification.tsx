@@ -15,31 +15,32 @@ const Verification = () => {
 
   useEffect(() => {
     async function verify() {
-        setStatus("pending");
+      setStatus("pending");
 
-        try {
-          await userApi.post(
-            `/auth/verify?verificationCode=${verificationCode}`
-          );
+      try {
+        await userApi.post(`/auth/verify?verificationCode=${verificationCode}`);
 
-          localStorage.removeItem("pendingVerification");
-          sessionStorage.removeItem("pendingEmail");
+        localStorage.removeItem("pendingVerification");
+        sessionStorage.removeItem("pendingEmail");
 
-          setStatus("success");
+        setStatus("success");
 
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 5000);
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            if (error.response?.status === 400) {
-              setStatus("invalid");
-              return;
-            }
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 5000);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 400) {
+            setStatus("invalid");
+            return;
+          }
+
+          if (error.response?.status === 404) {
+            setStatus("error");
+            return;
           }
         }
-
-        return;
+      }
     }
 
     verify();
