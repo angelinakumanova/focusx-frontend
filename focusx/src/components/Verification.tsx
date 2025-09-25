@@ -12,11 +12,9 @@ const Verification = () => {
 
   const [searchParams] = useSearchParams();
   const verificationCode = searchParams.get("verificationCode");
-  const isPending = localStorage.getItem("pendingVerification");
 
   useEffect(() => {
     async function verify() {
-      if (verificationCode && isPending) {
         setStatus("pending");
 
         try {
@@ -42,8 +40,6 @@ const Verification = () => {
         }
 
         return;
-      }
-      setStatus("error");
     }
 
     verify();
