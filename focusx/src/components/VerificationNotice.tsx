@@ -45,7 +45,7 @@ const VerificationNotice = () => {
             disabled={isResendLimit || isResent}
             className={
               "w-48 rounded-sm px-4 py-2 bg-gray-700 transition-colors text-sm " +
-              (isResendLimit
+              (isResendLimit || isResent
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gray-600 hover:cursor-pointer")
             }
